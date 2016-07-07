@@ -1,0 +1,10 @@
+{
+  "name": "mealing",
+  "dependencies": {
+    "bootstrap": "*",
+    "bootswatch": "*",
+    "angular": "*",
+    "angular-resource": "*",
+    "angular-ui-router": "*"
+  }
+}
