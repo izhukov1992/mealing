@@ -1,6 +1,8 @@
 db.sqlite3
 mealing/__pycache__
 mealing/__pycache__/*
+meal/__pycache__
+meal/__pycache__/*
 meal/migrations/__pycache__
 meal/migrations/__pycache__/*
 
