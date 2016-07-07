@@ -5,4 +5,5 @@ meal/__pycache__
 meal/__pycache__/*
 meal/migrations/__pycache__
 meal/migrations/__pycache__/*
+static/bower_components
 

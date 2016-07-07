@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from meal.views import ReporterViewSet, MealViewSet
+from .views import MealingIndexView
 
 api_v1_router = routers.DefaultRouter()
 api_v1_router.register(r'reporter', ReporterViewSet)
@@ -25,4 +26,5 @@ api_v1_router.register(r'meal', MealViewSet)
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/', include(api_v1_router.urls)),
+    url(r'^$', MealingIndexView.as_view()),
 ]
