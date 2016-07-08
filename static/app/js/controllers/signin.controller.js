@@ -5,7 +5,7 @@
     .module('mealing')
     .controller('SignInController', SignInController);
 
-    function SignInController($scope, Auth) {
+    function SignInController($scope, $cookies, Auth) {
       var vm = this;
       vm.SignIn = SignIn;
       
@@ -15,8 +15,9 @@
           'password': vm.password
         });
         auth.$save()
-        .then(function() {
+        .then(function(data) {
           console.log("signed in")
+          $cookies.put('profile', data.id);
         });
       }
     }

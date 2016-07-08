@@ -4,6 +4,7 @@
   angular
     .module('mealing', [
       'ngResource',
+      'ngCookies',
       'ui.router',
     ]).
     config(function($locationProvider, $resourceProvider, $urlRouterProvider, $stateProvider) {
@@ -11,25 +12,31 @@
 
       $resourceProvider.defaults.stripTrailingSlashes = false;
 
-      $urlRouterProvider.otherwise("/signin");
+      $urlRouterProvider.otherwise('/');
 
       $stateProvider
+        .state('dashboard', {
+          url: '/',
+          templateUrl: 'static/app/templates/dashboard.html',
+          controller: 'DashboardController',
+          controllerAs: 'vm'
+        })
         .state('signup', {
-          url: "/signup",
-          templateUrl: "static/app/templates/signup.html",
+          url: '/signup',
+          templateUrl: 'static/app/templates/signup.html',
           controller: 'SignUpController',
-          controllerAs: 'vm',
+          controllerAs: 'vm'
         })
         .state('signin', {
-          url: "/signin",
-          templateUrl: "static/app/templates/signin.html",
+          url: '/signin',
+          templateUrl: 'static/app/templates/signin.html',
           controller: 'SignInController',
-          controllerAs: 'vm',
+          controllerAs: 'vm'
         })
         .state('signout', {
-          url: "/signout",
-          controller: 'SignOutController',
-        })
+          url: '/signout',
+          controller: 'SignOutController'
+        });
     })
     .run(function($rootScope, $http, $window, $state) {
       $http.defaults.xsrfHeaderName = 'X-CSRFToken';

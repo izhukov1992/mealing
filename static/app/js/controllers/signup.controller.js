@@ -5,17 +5,14 @@
     .module('mealing')
     .controller('SignUpController', SignUpController);
 
-    function SignUpController($scope, Reporter) {
+    function SignUpController($scope, User) {
       var vm = this;
       vm.SignUp = SignUp;
       
       function SignUp() {
-        var auth = new Reporter({
-          'user': {
-            'username': vm.username,
-            'password': vm.password
-          },
-          'limit': vm.limit
+        var auth = new User({
+          'username': vm.username,
+          'password': vm.password
         });
         auth.$save()
         .then(function() {
