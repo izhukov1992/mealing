@@ -23,7 +23,9 @@ class AuthView(APIView):
     serializer_class = UserSerializer
  
     def post(self, request):
-        user = authenticate(username=request.data['username'], password=request.data['password'])
+        username = request.data.get('username') or None
+        password = request.data.get('password') or None
+        user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
