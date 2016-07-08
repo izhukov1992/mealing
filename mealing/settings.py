@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djangobower',
     'rest_framework',
+    'reporter',
     'meal',
 ]
 

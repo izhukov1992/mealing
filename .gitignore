@@ -5,5 +5,9 @@ meal/__pycache__
 meal/__pycache__/*
 meal/migrations/__pycache__
 meal/migrations/__pycache__/*
+reporter/__pycache__
+reporter/__pycache__/*
+reporter/migrations/__pycache__
+reporter/migrations/__pycache__/*
 static/bower_components
 
