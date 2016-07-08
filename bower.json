@@ -5,6 +5,7 @@
     "bootswatch": "*",
     "angular": "*",
     "angular-resource": "*",
-    "angular-ui-router": "*"
+    "angular-ui-router": "*",
+    "angular-cookies": "*"
   }
 }

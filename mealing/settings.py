@@ -149,4 +149,5 @@ BOWER_INSTALLED_APPS = [
     'angular',
     'angular-resource',
     'angular-ui-router',
+    'angular-cookies',
 ]
