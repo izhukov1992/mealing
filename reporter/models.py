@@ -7,5 +7,5 @@ class Reporter(models.Model):
     Reporter model
     """
 
-    user = models.OneToOneField(User)
-    limit = models.IntegerField()
+    user = models.OneToOneField(User, blank=True, null=True)
+    limit = models.IntegerField(blank=True, null=True)

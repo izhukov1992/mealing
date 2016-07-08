@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
-from reporter.views import ReporterViewSet, AuthView
+from reporter.views import UserViewSet, ReporterViewSet, AuthView
 from meal.views import MealViewSet
 from .views import MealingIndexView
 
 api_v1_router = routers.DefaultRouter()
+api_v1_router.register(r'user', UserViewSet)
 api_v1_router.register(r'reporter', ReporterViewSet)
 api_v1_router.register(r'meal', MealViewSet)
 

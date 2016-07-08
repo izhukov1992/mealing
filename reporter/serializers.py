@@ -14,20 +14,20 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password')
 
+    def create(self, validated_data):
+        username = validated_data.get('username')
+        password = validated_data.get('password')
+        user = User.objects.create(username=username)
+        user.set_password(password)
+        user.save()
+        Reporter.objects.create(user=user)
+        return user
+
 
 class ReporterSerializer(serializers.ModelSerializer):
     """
     Model serializer of Reporter model
     """
 
-    user = UserSerializer()
-
     class Meta:
         model = Reporter
-
-    def create(self, validated_data):
-        user = User.objects.create(username=validated_data['user']['username'])
-        user.set_password(validated_data['user']['password'])
-        user.save()
-
-        return Reporter.objects.create(user=user, limit=validated_data['limit'])
