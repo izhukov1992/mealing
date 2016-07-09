@@ -21,8 +21,13 @@
           controller: 'DashboardController',
           controllerAs: 'vm',
           resolve: {
-            Meals: function (Meal) {
+            meals: function (Meal) {
               return Meal.query().$promise.then(function (response) {
+                return response;
+              });
+            },
+            profile: function ($cookies, Reporter) {
+              return Reporter.get({'id': $cookies.get('profile')}).$promise.then(function (response) {
                 return response;
               });
             }

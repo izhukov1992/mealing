@@ -1,16 +1,14 @@
 <div class="well">
-  <form class="form-horizontal">
+  <legend>Dashboard</legend>
+  <form>
     <fieldset>
-      <legend>Dashboard</legend>
       <div class="form-group">
-        <label for="limit" class="col-lg-2 control-label">Calorie limit</label>
-        <div class="col-lg-10">
+        <div class="input-group">
+          <span class="input-group-addon">Daily Goal: </span>
           <input type="number" class="form-control" id="limit" placeholder="Calorie limit" ng-model="vm.limit">
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-lg-10 col-lg-offset-2">
-          <button class="btn btn-primary" ng-click="vm.SetCalorieLimit()">Update</button>
+          <span class="input-group-btn">
+            <button class="btn btn-primary" ng-click="vm.SetCalorieLimit()">Update</button>
+          </span>
         </div>
       </div>
     </fieldset>
@@ -19,21 +17,25 @@
     <tbody>
       <thead>
         <tr>
-          <td>
-            <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.instance.description">
-          </td>
-          <td>
-            <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.instance.calories">
-          </td>
-          <td>
-            <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.instance.date">
-          </td>
-          <td>
-            <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.instance.time">
-          </td>
-          <td>
-            <button class="btn btn-sm btn-success" ng-click="vm.EatOut()">Add Meal</button>
-          </td>
+          <form>
+            <fieldset>
+              <td>
+                <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.instance.description">
+              </td>
+              <td>
+                <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.instance.calories">
+              </td>
+              <td>
+                <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.instance.date">
+              </td>
+              <td>
+                <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.instance.time">
+              </td>
+              <td>
+                <button class="btn btn-sm btn-success" ng-click="vm.EatOut()">Add Meal</button>
+              </td>
+            </fieldset>
+          </form>
         </tr>
         <tr>
           <th>Meal</th>
@@ -44,7 +46,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="meal in vm.Meals | orderBy:['-date', '-time', '-id']">
+        <tr ng-repeat="meal in vm.meals | orderBy:['-date', '-time', '-id']">
           <td>
             <span>{{meal.description}}</span>
           </td>

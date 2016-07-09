@@ -5,10 +5,11 @@
     .module('mealing')
     .controller('DashboardController', DashboardController);
 
-    function DashboardController($scope, $cookies, Meals, Reporter, Meal) {
+    function DashboardController($scope, $cookies, Reporter, Meal, meals, profile) {
       var vm = this;
       vm.instance = null;
-      vm.Meals = Meals;
+      vm.meals = meals;
+      vm.limit = profile.limit;
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
       vm.Edit = Edit;
