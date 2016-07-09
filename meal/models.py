@@ -7,7 +7,7 @@ class Meal(models.Model):
     Meal model
     """
 
-    reporter = models.ForeignKey(Reporter)
+    reporter = models.ForeignKey(Reporter, blank=True, null=True)
     date = models.DateField()
     time = models.TimeField()
     description = models.CharField(max_length=255)
