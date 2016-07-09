@@ -17,6 +17,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        return [self.request.user]
+
 
 class ReporterViewSet(viewsets.ModelViewSet):
     """
@@ -26,6 +29,9 @@ class ReporterViewSet(viewsets.ModelViewSet):
     permission_classes = [ReporterUserPermissions,]
     queryset = Reporter.objects.all()
     serializer_class = ReporterSerializer
+
+    def get_queryset(self):
+        return Reporter.objects.filter(user=self.request.user)
 
  
 class AuthView(APIView):

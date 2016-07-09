@@ -14,5 +14,8 @@ class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
 
+    def get_queryset(self):
+        return Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user))
+
     def perform_create(self, serializer):
         serializer.save(reporter=Reporter.objects.get(user=self.request.user))
