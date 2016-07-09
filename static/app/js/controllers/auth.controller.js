@@ -5,7 +5,7 @@
     .module('mealing')
     .controller('AuthController', AuthController);
 
-    function AuthController($scope, $cookies, Auth, User) {
+    function AuthController($scope, $cookies, $state, Auth, User) {
       var vm = this;
       vm.signup = null;
       vm.signin = null;
@@ -32,6 +32,7 @@
         .then(function(data) {
           console.log("signed in")
           $cookies.put('profile', data.id);
+          $state.go('dashboard');
         });
       }
     }
