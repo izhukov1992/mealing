@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from reporter.models import Reporter
 from .models import Meal
 from .serializers import MealSerializer
+from .permissions import MealUserPermissions
 
 
 class MealViewSet(viewsets.ModelViewSet):
@@ -9,7 +10,7 @@ class MealViewSet(viewsets.ModelViewSet):
     View set of Meal API
     """
 
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated, MealUserPermissions]
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
 

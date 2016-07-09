@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Reporter
 from .serializers import UserSerializer, ReporterSerializer
+from .permissions import UserPermissions, ReporterUserPermissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -12,6 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     View set of User API
     """
 
+    permission_classes = [UserPermissions,]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -21,6 +23,7 @@ class ReporterViewSet(viewsets.ModelViewSet):
     View set of Reporter API
     """
 
+    permission_classes = [ReporterUserPermissions,]
     queryset = Reporter.objects.all()
     serializer_class = ReporterSerializer
 
