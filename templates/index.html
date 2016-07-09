@@ -49,8 +49,8 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a ui-sref="dashboard">Dashboard</a></li>
-            <li><a ui-sref="signup">Sign Up</a></li>
-            <li><a ui-sref="signin">Sign In</a></li>
+            <li><a ui-sref="auth">Sign Up</a></li>
+            <li><a ui-sref="auth">Sign In</a></li>
             <li><a ui-sref="signout">Sign Out</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -80,9 +80,9 @@
     <script src="{% static 'app/js/services/user.service.js' %}"></script>
     <script src="{% static 'app/js/services/auth.service.js' %}"></script>
     <script src="{% static 'app/js/services/reporter.service.js' %}"></script>
+    <script src="{% static 'app/js/services/meal.service.js' %}"></script>
     <script src="{% static 'app/js/controllers/dashboard.controller.js' %}"></script>
-    <script src="{% static 'app/js/controllers/signup.controller.js' %}"></script>
-    <script src="{% static 'app/js/controllers/signin.controller.js' %}"></script>
+    <script src="{% static 'app/js/controllers/auth.controller.js' %}"></script>
     <script src="{% static 'app/js/controllers/signout.controller.js' %}"></script>
   </body>
 </html>

@@ -1,0 +1,48 @@
+<div class="well">
+  <form class="form-horizontal">
+    <fieldset>
+      <legend>Sign Up</legend>
+      <div class="form-group">
+        <label for="username" class="col-lg-2 control-label">Username</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="username" placeholder="Username" ng-model="vm.signup.username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-lg-2 control-label">Password</label>
+        <div class="col-lg-10">
+          <input type="password" class="form-control" id="password" placeholder="Password" ng-model="vm.signup.password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+          <button class="btn btn-primary" ng-click="vm.SignUp()">Sign Up</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="well">
+  <form class="form-horizontal">
+    <fieldset>
+      <legend>Sign In</legend>
+      <div class="form-group">
+        <label for="username" class="col-lg-2 control-label">Username</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="username" placeholder="Username" ng-model="vm.signin.username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-lg-2 control-label">Password</label>
+        <div class="col-lg-10">
+          <input type="password" class="form-control" id="password" placeholder="Password" ng-model="vm.signin.password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+          <button class="btn btn-primary" ng-click="vm.SignIn()">Sign In</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

@@ -11,7 +11,7 @@
       .then(function() {
         console.log("signed out")
         $cookies.remove('profile');
-        $state.go('signin');
+        $state.go('auth');
       });
     }
 

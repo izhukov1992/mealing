@@ -19,18 +19,19 @@
           url: '/',
           templateUrl: 'static/app/templates/dashboard.html',
           controller: 'DashboardController',
-          controllerAs: 'vm'
+          controllerAs: 'vm',
+          resolve: {
+            Meals: function (Meal) {
+              return Meal.query().$promise.then(function (response) {
+                return response;
+              });
+            }
+          }
         })
-        .state('signup', {
-          url: '/signup',
-          templateUrl: 'static/app/templates/signup.html',
-          controller: 'SignUpController',
-          controllerAs: 'vm'
-        })
-        .state('signin', {
-          url: '/signin',
-          templateUrl: 'static/app/templates/signin.html',
-          controller: 'SignInController',
+        .state('auth', {
+          url: '/auth',
+          templateUrl: 'static/app/templates/auth.html',
+          controller: 'AuthController',
           controllerAs: 'vm'
         })
         .state('signout', {
