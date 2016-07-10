@@ -5,19 +5,22 @@
     .module('mealing')
     .controller('DashboardController', DashboardController);
 
-    function DashboardController($scope, $cookies, Reporter, Meal, meals, profile) {
+    function DashboardController($scope, $cookies, Reporter, Meal, meals, today, profile) {
       var vm = this;
       vm.add = {};
       vm.edit = {};
       vm.filter = {};
       vm.meals = meals;
+      vm.today = today;
       vm.limit = profile.limit;
+      vm.percentage = CalculateMeal();
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
       vm.EditMeal = EditMeal;
       vm.SaveMeal = SaveMeal;
       vm.RemoveMeal = RemoveMeal;
       vm.FilterMeal = FilterMeal;
+      vm.TodayMeal = TodayMeal;
       
       function SetCalorieLimit() {
         var reporter = new Reporter({
@@ -88,6 +91,30 @@
         .then(function (data) {
           vm.meals = data;
         });
+      }
+      
+      function TodayMeal() {
+        Meal
+        .query({
+          'only_today': true
+        })
+        .$promise
+        .then(function (data) {
+          vm.today = data;
+        });
+      }
+      
+      function CalculateMeal() {
+        var actual = 0;
+        if (vm.today.length === 1) {
+          actual = vm.today[0].calories;
+        }
+        else {
+          actual = vm.today.reduce(function (previous, current) {
+            return previous.calories + current.calories;
+          });
+        }
+        return actual / vm.limit * 100;
       }
     }
 

@@ -26,6 +26,11 @@
                 return response;
               });
             },
+            today: function (Meal) {
+              return Meal.query({'only_today': true}).$promise.then(function (response) {
+                return response;
+              });
+            },
             profile: function ($cookies, Reporter) {
               return Reporter.get({'id': $cookies.get('profile')}).$promise.then(function (response) {
                 return response;

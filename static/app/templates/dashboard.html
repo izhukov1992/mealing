@@ -1,19 +1,28 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="well">
-      <form>
-        <fieldset>
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon">Daily Goal: </span>
-              <input type="number" class="form-control" id="limit" placeholder="Calorie limit" ng-model="vm.limit">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" ng-click="vm.SetCalorieLimit()">Update</button>
-              </span>
-            </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-3">
+          <form>
+            <fieldset>
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">Daily Goal: </span>
+                  <input type="number" class="form-control" id="limit" placeholder="Calorie limit" ng-model="vm.limit">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="vm.SetCalorieLimit()">Update</button>
+                  </span>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="col-xs-12 col-sm-9">
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" style="width: {{vm.percentage}}%"></div>
           </div>
-        </fieldset>
-      </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
