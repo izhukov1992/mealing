@@ -9,6 +9,7 @@
       var vm = this;
       vm.add = {};
       vm.edit = {};
+      vm.filter = {};
       vm.meals = meals;
       vm.limit = profile.limit;
       vm.SetCalorieLimit = SetCalorieLimit;
@@ -16,6 +17,7 @@
       vm.EditMeal = EditMeal;
       vm.SaveMeal = SaveMeal;
       vm.RemoveMeal = RemoveMeal;
+      vm.FilterMeal = FilterMeal;
       
       function SetCalorieLimit() {
         var reporter = new Reporter({
@@ -73,6 +75,18 @@
         .then(function() {
           console.log("meal " + instance.id + " removed");
           vm.meals.splice(vm.meals.indexOf(instance), 1);
+        });
+      }
+      
+      function FilterMeal() {
+        Meal
+        .query({
+          'start_date': vm.filter.start_date,
+          'end_date': vm.filter.end_date
+        })
+        .$promise
+        .then(function (data) {
+          vm.meals = data;
         });
       }
     }
