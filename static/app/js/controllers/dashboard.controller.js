@@ -7,13 +7,15 @@
 
     function DashboardController($scope, $cookies, Reporter, Meal, meals, profile) {
       var vm = this;
-      vm.instance = null;
+      vm.add = {};
+      vm.edit = {};
       vm.meals = meals;
       vm.limit = profile.limit;
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
-      vm.Edit = Edit;
-      vm.Remove = Remove;
+      vm.EditMeal = EditMeal;
+      vm.SaveMeal = SaveMeal;
+      vm.RemoveMeal = RemoveMeal;
       
       function SetCalorieLimit() {
         var reporter = new Reporter({
@@ -28,29 +30,49 @@
       
       function EatOut() {
         var meal = new Meal({
-          'description': vm.instance.description,
-          'calories': vm.instance.calories,
-          'date': vm.instance.date,
-          'time': vm.instance.time
+          'description': vm.add.description,
+          'calories': vm.add.calories,
+          'date': vm.add.date,
+          'time': vm.add.time
         });
         meal.$save()
         .then(function(meal) {
           console.log("mealed");
-          vm.Meals.push(meal);
+          vm.meals.push(meal);
         });
       }
       
-      function Edit(instance) {
+      function EditMeal(instance) {
+        var index = vm.meals.indexOf(instance);
+        angular.copy(instance, vm.edit);
+        vm.edit.index = index;
       }
       
-      function Remove(instance) {
+      function SaveMeal() {
+        var meal = new Meal({
+          'id': vm.edit.id,
+          'description': vm.edit.description,
+          'calories': vm.edit.calories,
+          'date': vm.edit.date,
+          'time': vm.edit.time
+        });
+        meal.$update()
+        .then(function() {
+          console.log("meal " + vm.edit.id + " updated");
+          var index = vm.edit.index;
+          delete vm.edit.index;
+          angular.copy(vm.edit, vm.meals[index]);
+        });
+      }
+      
+      function RemoveMeal(instance) {
         var meal = new Meal({
           'id': instance.id
         });
         meal.$remove()
         .then(function() {
           console.log("meal " + instance.id + " removed");
-          vm.Meals.splice(vm.Meals.indexOf(instance), 1);
+          vm.meals.splice(vm.meals.indexOf(instance), 1);
         });
       }
     }

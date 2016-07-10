@@ -20,16 +20,16 @@
           <form>
             <fieldset>
               <td>
-                <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.instance.description">
+                <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.add.description">
               </td>
               <td>
-                <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.instance.calories">
+                <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.add.calories">
               </td>
               <td>
-                <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.instance.date">
+                <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.date">
               </td>
               <td>
-                <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.instance.time">
+                <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.add.time">
               </td>
               <td>
                 <button class="btn btn-sm btn-success" ng-click="vm.EatOut()">Add Meal</button>
@@ -65,8 +65,8 @@
                 <span class="glyphicon glyphicon-collapse-down">
               </button>
               <ul class="dropdown-menu">
-                <li><a href="#" class="btn btn-link" ng-click="vm.Edit(meal)" data-toggle="modal" data-target="#myModal">Edit</a></li>
-                <li><a href="#" class="btn btn-link" ng-click="vm.Remove(meal)">Remove</a></li>
+                <li><a href="#" class="btn btn-link" ng-click="vm.EditMeal(meal)" data-toggle="modal" data-target="#myModal">Edit</a></li>
+                <li><a href="#" class="btn btn-link" ng-click="vm.RemoveMeal(meal)">Remove</a></li>
                </ul>
             </div>
           </td>
@@ -90,19 +90,19 @@
                 <form>
                   <fieldset>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.instance.description">
+                      <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.edit.description">
                     </td>
                     <td>
-                      <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.instance.calories">
+                      <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.edit.calories">
                     </td>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.instance.date">
+                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date">
                     </td>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.instance.time">
+                      <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.edit.time">
                     </td>
                     <td>
-                      <button class="btn btn-sm btn-success" ng-click="">Edit Meal</button>
+                      <button class="btn btn-sm btn-success" ng-click="vm.SaveMeal()">Save</button>
                     </td>
                   </fieldset>
                 </form>
