@@ -3,6 +3,7 @@ from reporter.models import Reporter
 from .models import Meal
 from .serializers import MealSerializer
 from .permissions import MealUserPermissions
+from datetime import datetime
 
 
 class MealViewSet(viewsets.ModelViewSet):
@@ -16,6 +17,9 @@ class MealViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user))
+        only_today = self.request.query_params.get('only_today')
+        if only_today:
+            return queryset.filter(date=datetime.today())
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         if start_date:
