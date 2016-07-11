@@ -6,6 +6,7 @@
       'ngResource',
       'ngCookies',
       'ui.bootstrap',
+      'ui.bootstrap.datetimepicker',
       'ui.router',
     ]).
     config(function($locationProvider, $resourceProvider, $urlRouterProvider, $stateProvider) {

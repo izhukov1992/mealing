@@ -95,7 +95,12 @@
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.add.time">
+                    <div class="input-group">
+                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.time" datetime-picker="HH:mm:ss" is-open="vm.tp_add" enable-date="false" close-on-selection="true" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-xs btn-default" ng-click="vm.tp_add ? vm.tp_add=false : vm.tp_add=true"><i class="glyphicon glyphicon-time"></i></button>
+                      </span>
+                    </div>
                   </td>
                   <td>
                     <button class="btn btn-sm btn-success" ng-click="vm.EatOut()">Add Meal</button>
@@ -172,7 +177,12 @@
                       </div>
                     </td>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Time..." ng-model="vm.edit.time">
+                      <div class="input-group">
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.time" datetime-picker="HH:mm:ss" is-open="vm.tp_edit" enable-date="false" close-on-selection="true" />
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-xs btn-default" ng-click="vm.tp_edit ? vm.tp_edit=false : vm.tp_edit=true"><i class="glyphicon glyphicon-time"></i></button>
+                        </span>
+                      </div>
                     </td>
                     <td>
                       <button class="btn btn-sm btn-success" data-dismiss="modal" ng-click="vm.SaveMeal()">Save</button>

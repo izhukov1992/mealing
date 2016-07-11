@@ -23,6 +23,7 @@
       vm.TodayMeal = TodayMeal;
       vm.CalculateMeal = CalculateMeal;
       vm.FormatDate = FormatDate;
+      vm.FormatTime = FormatTime;
       
       vm.CalculateMeal();
       
@@ -40,11 +41,12 @@
       
       function EatOut() {
         var date = vm.FormatDate(vm.add.date);
+        var time = vm.FormatTime(vm.add.time);
         var meal = new Meal({
           'description': vm.add.description,
           'calories': vm.add.calories,
           'date': date,
-          'time': vm.add.time
+          'time': time
         });
         meal.$save()
         .then(function(meal) {
@@ -56,17 +58,23 @@
       
       function EditMeal(instance) {
         angular.copy(instance, vm.edit);
+        var time = vm.edit.time.split(":");
+        vm.edit.time = new Date();
+        vm.edit.time.setHours(time[0]);
+        vm.edit.time.setMinutes(time[1]);
+        vm.edit.time.setSeconds(time[2]);
         vm.edit.date = new Date(vm.edit.date);
       }
       
       function SaveMeal() {
         var date = vm.FormatDate(vm.edit.date);
+        var time = vm.FormatTime(vm.edit.time);
         var meal = new Meal({
           'id': vm.edit.id,
           'description': vm.edit.description,
           'calories': vm.edit.calories,
           'date': date,
-          'time': vm.edit.time
+          'time': time
         });
         meal.$update()
         .then(function() {
@@ -131,9 +139,18 @@
         var date;
         if (Date.parse(source_date)) {
           date = new Date(source_date);
-          date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+          date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         }
         return date
+      }
+      
+      function FormatTime(source_date) {
+        var time;
+        if (Date.parse(source_date)) {
+          time = new Date(source_date);
+          time = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+        }
+        return time
       }
     }
 
