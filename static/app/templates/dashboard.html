@@ -19,10 +19,20 @@
         </div>
         <div class="col-xs-12 col-md-9">
           <div class="progress progress-striped">
-            <div class="progress-bar progress-striped" ng-class="vm.percentage > 100 ? 'progress-bar-danger' : vm.percentage > 75 ? 'progress-bar-warning' : 'progress-bar-success'" style="width: {{vm.percentage}}%"></div>
+            <div class="progress-bar progress-striped" ng-class="vm.percentage >= 100 ? 'progress-bar-danger' : vm.percentage > 75 ? 'progress-bar-warning' : 'progress-bar-success'" style="width: {{vm.percentage}}%"></div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="alert alert-dismissible alert-warning" ng-if="vm.percentage > 75 && vm.percentage < 100">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4>Warning!</h4>
+      <p>Daily goal is nearly reached!</p>
+    </div>
+    <div class="alert alert-dismissible alert-danger" ng-if="vm.percentage >= 100">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4>Warning!</h4>
+      <p>Daily goal is exceeded!</p>
     </div>
   </div>
 </div>
