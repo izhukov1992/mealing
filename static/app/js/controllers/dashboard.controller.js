@@ -13,7 +13,7 @@
       vm.meals = meals;
       vm.today = today;
       vm.limit = profile.limit;
-      vm.percentage = CalculateMeal();
+      vm.percentage = 0;
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
       vm.EditMeal = EditMeal;
@@ -21,6 +21,9 @@
       vm.RemoveMeal = RemoveMeal;
       vm.FilterMeal = FilterMeal;
       vm.TodayMeal = TodayMeal;
+      vm.CalculateMeal = CalculateMeal;
+      
+      vm.CalculateMeal();
       
       function SetCalorieLimit() {
         var reporter = new Reporter({
@@ -44,6 +47,7 @@
         .then(function(meal) {
           console.log("mealed");
           vm.meals.push(meal);
+          vm.TodayMeal();
         });
       }
       
@@ -67,6 +71,7 @@
           var index = vm.edit.index;
           delete vm.edit.index;
           angular.copy(vm.edit, vm.meals[index]);
+          vm.TodayMeal();
         });
       }
       
@@ -78,6 +83,7 @@
         .then(function() {
           console.log("meal " + instance.id + " removed");
           vm.meals.splice(vm.meals.indexOf(instance), 1);
+          vm.TodayMeal();
         });
       }
       
@@ -101,20 +107,20 @@
         .$promise
         .then(function (data) {
           vm.today = data;
+          vm.CalculateMeal();
         });
       }
       
       function CalculateMeal() {
-        var actual = 0;
         if (vm.today.length === 1) {
-          actual = vm.today[0].calories;
+          vm.percentage = vm.today[0].calories;
         }
         else {
-          actual = vm.today.reduce(function (previous, current) {
+          vm.percentage = vm.today.reduce(function (previous, current) {
             return previous.calories + current.calories;
           });
         }
-        return actual / vm.limit * 100;
+        vm.percentage = vm.percentage / vm.limit * 100;
       }
     }
 
