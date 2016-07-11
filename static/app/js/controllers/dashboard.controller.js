@@ -33,6 +33,7 @@
         reporter.$update()
         .then(function() {
           console.log("calorie limit updated");
+          vm.TodayMeal();
         });
       }
       
