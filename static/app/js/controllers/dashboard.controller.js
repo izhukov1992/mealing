@@ -113,10 +113,11 @@
       }
       
       function CalculateMeal() {
+        vm.percentage = 0;
         if (vm.today.length === 1) {
           vm.percentage = vm.today[0].calories;
         }
-        else {
+        else if (vm.today.length > 1) {
           vm.percentage = vm.today.reduce(function (previous, current) {
             return previous.calories + current.calories;
           });
