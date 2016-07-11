@@ -5,6 +5,7 @@
     .module('mealing', [
       'ngResource',
       'ngCookies',
+      'ui.bootstrap',
       'ui.router',
     ]).
     config(function($locationProvider, $resourceProvider, $urlRouterProvider, $stateProvider) {

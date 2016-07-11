@@ -13,6 +13,7 @@
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
   vertical-align: middle;
+  max-width: 200px;
 }
 
 .table-sortered>thead>tr>th {

@@ -22,6 +22,7 @@
       vm.FilterMeal = FilterMeal;
       vm.TodayMeal = TodayMeal;
       vm.CalculateMeal = CalculateMeal;
+      vm.FormatDate = FormatDate;
       
       vm.CalculateMeal();
       
@@ -38,10 +39,11 @@
       }
       
       function EatOut() {
+        var date = vm.FormatDate(vm.add.date);
         var meal = new Meal({
           'description': vm.add.description,
           'calories': vm.add.calories,
-          'date': vm.add.date,
+          'date': date,
           'time': vm.add.time
         });
         meal.$save()
@@ -53,25 +55,23 @@
       }
       
       function EditMeal(instance) {
-        var index = vm.meals.indexOf(instance);
         angular.copy(instance, vm.edit);
-        vm.edit.index = index;
+        vm.edit.date = new Date(vm.edit.date);
       }
       
       function SaveMeal() {
+        var date = vm.FormatDate(vm.edit.date);
         var meal = new Meal({
           'id': vm.edit.id,
           'description': vm.edit.description,
           'calories': vm.edit.calories,
-          'date': vm.edit.date,
+          'date': date,
           'time': vm.edit.time
         });
         meal.$update()
         .then(function() {
           console.log("meal " + vm.edit.id + " updated");
-          var index = vm.edit.index;
-          delete vm.edit.index;
-          angular.copy(vm.edit, vm.meals[index]);
+          vm.FilterMeal();
           vm.TodayMeal();
         });
       }
@@ -83,16 +83,18 @@
         meal.$remove()
         .then(function() {
           console.log("meal " + instance.id + " removed");
-          vm.meals.splice(vm.meals.indexOf(instance), 1);
+          vm.FilterMeal();
           vm.TodayMeal();
         });
       }
       
       function FilterMeal() {
+        var start_date = vm.FormatDate(vm.filter.start_date);
+        var end_date = vm.FormatDate(vm.filter.end_date);
         Meal
         .query({
-          'start_date': vm.filter.start_date,
-          'end_date': vm.filter.end_date
+          'start_date': start_date,
+          'end_date': end_date
         })
         .$promise
         .then(function (data) {
@@ -123,6 +125,15 @@
           });
         }
         vm.percentage = vm.percentage / vm.limit * 100;
+      }
+      
+      function FormatDate(source_date) {
+        var date;
+        if (Date.parse(source_date)) {
+          date = new Date(source_date);
+          date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+        }
+        return date
       }
     }
 

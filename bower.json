@@ -5,7 +5,8 @@
     "bootswatch": "*",
     "angular": "*",
     "angular-resource": "*",
-    "angular-ui-router": "*",
-    "angular-cookies": "*"
+    "angular-cookies": "*",
+    "angular-bootstrap": "*",
+    "angular-ui-router": "*"
   }
 }
