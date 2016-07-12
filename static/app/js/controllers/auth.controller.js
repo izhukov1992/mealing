@@ -7,12 +7,16 @@
 
     function AuthController($scope, $cookies, $state, Auth, User) {
       var vm = this;
-      vm.signup = null;
-      vm.signin = null;
+      vm.signup = {};
+      vm.signin = {};
       vm.SignUp = SignUp;
       vm.SignIn = SignIn;
       
       function SignUp() {
+        if (!vm.signup.password || !vm.signup.password_confirm || 
+             vm.signup.password != vm.signup.password_confirm) {
+          return;
+        }
         var auth = new User({
           'username': vm.signup.username,
           'password': vm.signup.password
