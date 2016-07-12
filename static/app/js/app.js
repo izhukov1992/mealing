@@ -52,16 +52,24 @@
           controller: 'SignOutController'
         });
     })
-    .run(function($rootScope, $http, $window, $state) {
+    .run(function($http, $rootScope, $cookies, $state) {
       $http.defaults.xsrfHeaderName = 'X-CSRFToken';
       $http.defaults.xsrfCookieName = 'csrftoken';
 
-      // Ensure authentication
-      //$rootScope.$on('$locationChangeSuccess', function() {
-      //  if ($window.authRequired) {
-      //    $state.go('login');
-      //  }
-      //});
+      $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        if (toState.name == 'auth') {
+          if ($cookies.get('profile')) {
+            event.preventDefault();
+            $state.go('dashboard');
+          }
+        }
+        else {
+          if (!$cookies.get('profile')) {
+            event.preventDefault();
+            $state.go('auth');
+          }
+        }
+      });
     });
   
 })();
