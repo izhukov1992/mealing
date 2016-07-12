@@ -150,4 +150,55 @@
       </table>
     </div>
   </div>
-</div>
+</div><div class="modal fade" id="meal_modal" tabindex="-1" role="dialog" aria-labelledby="meal_modal_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="meal_modal_label">Edit Meal</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-hover table-bordered table-sortered">
+          <tbody>
+            <thead>
+              <tr>
+                <form>
+                  <fieldset>
+                    <td>
+                      <input type="text" class="form-control input-sm" placeholder="Meal..." ng-model="vm.edit.description">
+                    </td>
+                    <td>
+                      <input type="number" class="form-control input-sm" placeholder="Calories..." ng-model="vm.edit.calories">
+                    </td>
+                    <td>
+                      <div class="input-group">
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date" uib-datepicker-popup is-open="vm.dp_edit" close-text="Close" />
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-xs btn-default" ng-click="vm.dp_edit ? vm.dp_edit=false : vm.dp_edit=true"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group">
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.time" datetime-picker="HH:mm:ss" is-open="vm.tp_edit" enable-date="false" close-on-selection="true" />
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-xs btn-default" ng-click="vm.tp_edit ? vm.tp_edit=false : vm.tp_edit=true"><i class="glyphicon glyphicon-time"></i></button>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-success" data-dismiss="modal" ng-click="vm.SaveMeal()">Save</button>
+                    </td>
+                  </fieldset>
+                </form>
+              </tr>
+            </thead>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div> 
