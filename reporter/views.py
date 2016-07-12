@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Reporter
@@ -13,7 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     View set of User API
     """
 
-    permission_classes = [UserPermissions,]
+    permission_classes = [permissions.IsAuthenticated, UserPermissions,]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -26,7 +27,7 @@ class ReporterViewSet(viewsets.ModelViewSet):
     View set of Reporter API
     """
 
-    permission_classes = [ReporterUserPermissions,]
+    permission_classes = [permissions.IsAuthenticated, ReporterUserPermissions,]
     queryset = Reporter.objects.all()
     serializer_class = ReporterSerializer
 
