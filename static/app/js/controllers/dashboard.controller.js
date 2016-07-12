@@ -132,15 +132,9 @@
       }
       
       function CalculateMeal() {
-        vm.percentage = 0;
-        if (vm.today.length === 1) {
-          vm.percentage = vm.today[0].calories;
-        }
-        else if (vm.today.length > 1) {
-          vm.percentage = vm.today.reduce(function (previous, current) {
-            return previous.calories + current.calories;
-          });
-        }
+        vm.percentage = vm.today.reduce(function (percentage, meal) {
+          return percentage + meal.calories;
+        }, 0);
         vm.percentage = vm.percentage / vm.limit * 100;
       }
       
