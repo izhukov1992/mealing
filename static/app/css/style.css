@@ -23,24 +23,11 @@ table.dataTable tbody th {
   padding: 8px;
 }
 
-.table-sortered>thead>tr>th {
-  position: relative;
-}
-
-.table-sortered>thead>tr>th.sortable:after {
-  position: absolute;
-  right: 0;
-  font-family: 'Glyphicons Halflings';
-  font-size: 12px;
-  content: "\e150";
-}
-
-.table-sortered>thead>tr>th.lower:after {
-  content: "\e155";
-}
-
-.table-sortered>thead>tr>th.higher:after {
-  content: "\e156";
+table.uib-daypicker thead th,
+table.uib-daypicker thead td,
+table.uib-daypicker tbody td,
+table.uib-daypicker tbody th {
+  padding: 0px;
 }
 
 ul, ol {
