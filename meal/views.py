@@ -24,8 +24,14 @@ class MealViewSet(viewsets.ModelViewSet):
         end_date = self.request.query_params.get('end_date')
         if start_date:
             queryset = queryset.filter(date__gte=start_date)
+            start_time = self.request.query_params.get('start_time')
+            if start_time:
+                queryset = queryset.exclude(time__lt=start_time)
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
+            end_time = self.request.query_params.get('end_time')
+            if end_time:
+                queryset = queryset.exclude(time__gt=end_time)
         return queryset
 
     def perform_create(self, serializer):
