@@ -16,6 +16,13 @@
   max-width: 200px;
 }
 
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tbody td,
+table.dataTable tbody th {
+  padding: 8px;
+}
+
 .table-sortered>thead>tr>th {
   position: relative;
 }

@@ -8,6 +8,7 @@
       'ui.bootstrap',
       'ui.bootstrap.datetimepicker',
       'ui.router',
+      'datatables',
     ]).
     config(function($locationProvider, $resourceProvider, $urlRouterProvider, $stateProvider) {
       $locationProvider.hashPrefix('!');

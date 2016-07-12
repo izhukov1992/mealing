@@ -5,7 +5,7 @@
     .module('mealing')
     .controller('DashboardController', DashboardController);
 
-    function DashboardController($scope, $cookies, Reporter, Meal, meals, today, profile) {
+    function DashboardController($scope, $cookies, DTOptionsBuilder, DTColumnDefBuilder, Reporter, Meal, meals, today, profile) {
       var vm = this;
       vm.add = {};
       vm.edit = {};
@@ -24,6 +24,15 @@
       vm.CalculateMeal = CalculateMeal;
       vm.FormatDate = FormatDate;
       vm.FormatTime = FormatTime;
+      
+      vm.dtOptions = DTOptionsBuilder.newOptions()
+        .withPaginationType('full_numbers')
+        .withDisplayLength(50)
+        .withOption('order', [[3, 'desc'],[4, 'desc'],[0, 'desc']]); 
+      vm.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0).notVisible(),
+        DTColumnDefBuilder.newColumnDef(5).notSortable(),
+      ];
       
       vm.CalculateMeal();
       
