@@ -110,8 +110,6 @@
         var end_date = vm.FormatDate(vm.filter.end_date);
         var start_time = vm.FormatTime(vm.filter.start_time);
         var end_time = vm.FormatTime(vm.filter.end_time);
-        console.log(vm.filter.start_time)
-        console.log(vm.filter.end_time)
         Meal
         .query({
           'start_date': start_date,
