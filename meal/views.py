@@ -16,29 +16,35 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
 
     def get_queryset(self):
+        queryset = Meal.objects.all()
         only_today = self.request.query_params.get('only_today')
         if only_today:
-            return Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user),
-                                       date=datetime.today())
+            return queryset.filter(reporter=Reporter.objects.get(user=self.request.user),
+                                   date=datetime.today())
         if self.request.user.is_staff:
-            queryset = Meal.objects.all()
             user = self.request.query_params.get('user')
             if user:
                 queryset = queryset.filter(reporter=Reporter.objects.get(user=user))
         else:
-            queryset = Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user))
+            queryset = queryset.filter(reporter=Reporter.objects.get(user=self.request.user))
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         if start_date:
             queryset = queryset.filter(date__gte=start_date)
-            start_time = self.request.query_params.get('start_time')
-            if start_time:
-                queryset = queryset.exclude(time__lt=start_time)
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
-            end_time = self.request.query_params.get('end_time')
-            if end_time:
-                queryset = queryset.exclude(time__gt=end_time)
+        start_time = self.request.query_params.get('start_time')
+        end_time = self.request.query_params.get('end_time')
+        if start_time:
+            if start_date:
+                queryset = queryset.exclude(date=start_date,
+                                            time__lt=start_time)
+            queryset = queryset.filter(time__gte=start_time)
+        if end_time:
+            if end_date:
+                queryset = queryset.exclude(date=end_date,
+                                            time__gt=end_time)
+            queryset = queryset.filter(time__lte=end_time)
         return queryset
 
     def perform_create(self, serializer):
