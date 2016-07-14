@@ -1,5 +1,6 @@
-from rest_framework import serializers
+#from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from rest_framework import serializers
 from .models import Reporter
 
 
@@ -13,15 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password')
-
-    def create(self, validated_data):
-        username = validated_data.get('username')
-        password = validated_data.get('password')
-        user = User.objects.create(username=username)
-        user.set_password(password)
-        user.save()
-        Reporter.objects.create(user=user)
-        return user
 
 
 class ReporterSerializer(serializers.ModelSerializer):

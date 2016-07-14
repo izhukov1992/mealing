@@ -22,6 +22,22 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return User.objects.all()
         return [self.request.user]
+ 
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data.get('username')
+            password = serializer.validated_data.get('password')
+            user = User.objects.create(username=username)
+            user.set_password(password)
+            user.save()
+            reporter = Reporter.objects.create(user=user)
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+            return Response(ReporterSerializer(reporter).data)
+        return Response(serializer.errors, status=400)
 
 
 class ReporterViewSet(viewsets.ModelViewSet):
@@ -55,7 +71,7 @@ class AuthView(APIView):
                 login(request, user)
                 reporter = Reporter.objects.get(user=user)
                 return Response(ReporterSerializer(reporter).data)
-        return Response(status=401)
+        return Response(status=400)
  
     def delete(self, request):
         logout(request)

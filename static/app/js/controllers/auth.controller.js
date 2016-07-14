@@ -22,8 +22,11 @@
           'password': vm.signup.password
         });
         auth.$save()
-        .then(function() {
+        .then(function(data) {
           console.log("signed up");
+          console.log("signed in");
+          $cookies.put('profile', data.id);
+          $state.go('dashboard');
         });
       }
       
@@ -34,7 +37,7 @@
         });
         auth.$save()
         .then(function(data) {
-          console.log("signed in")
+          console.log("signed in");
           $cookies.put('profile', data.id);
           $state.go('dashboard');
         });
