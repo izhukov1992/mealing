@@ -19,6 +19,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.queryset
         return [self.request.user]
 
 
@@ -32,6 +34,8 @@ class ReporterViewSet(viewsets.ModelViewSet):
     serializer_class = ReporterSerializer
 
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.queryset
         return Reporter.objects.filter(user=self.request.user)
 
  
