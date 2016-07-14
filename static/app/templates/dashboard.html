@@ -134,7 +134,7 @@
                   </div>
                 </td>
                 <td>
-                  <button class="btn btn-sm btn-success" ng-click="vm.EatOut()">Add Meal</button>
+                  <button class="btn btn-sm btn-success" ng-click="vm.EatOut()" ng-disabled="!vm.add.description || !vm.add.calories || !vm.add.date || !vm.add.time">Add Meal</button>
                 </td>
               </fieldset>
             </form>
@@ -218,7 +218,7 @@
                       </div>
                     </td>
                     <td>
-                      <button class="btn btn-sm btn-success" data-dismiss="modal" ng-click="vm.SaveMeal()">Save</button>
+                      <button class="btn btn-sm btn-success" data-dismiss="modal" ng-click="vm.SaveMeal()" ng-disabled="!vm.edit.description || !vm.edit.calories || !vm.edit.date || !vm.edit.time">Save</button>
                     </td>
                   </fieldset>
                 </form>
