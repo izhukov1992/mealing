@@ -8,4 +8,4 @@ class Reporter(models.Model):
     """
 
     user = models.OneToOneField(User, blank=True, null=True)
-    limit = models.IntegerField(blank=True, null=True)
+    limit = models.IntegerField(default=2500)
