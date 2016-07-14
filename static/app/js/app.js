@@ -46,6 +46,12 @@
             }
           }
         })
+        .state('manager', {
+          url: '/manager',
+          templateUrl: 'static/app/templates/manager.html',
+          controller: 'ManagerController',
+          controllerAs: 'vm'
+        })
         .state('auth', {
           url: '/auth',
           templateUrl: 'static/app/templates/auth.html',
