@@ -5,7 +5,7 @@
     .module('mealing')
     .controller('DashboardController', DashboardController);
 
-    function DashboardController($scope, $cookies, DTOptionsBuilder, DTColumnDefBuilder, Reporter, Meal, meals, today, profile) {
+    function DashboardController($scope, $cookies, DTOptionsBuilder, DTColumnDefBuilder, Reporter, Meal, meals, today, profile, users) {
       var vm = this;
       vm.add = {};
       vm.edit = {};
@@ -13,6 +13,8 @@
       vm.meals = meals;
       vm.today = today;
       vm.limit = profile.limit;
+      vm.staff = profile.is_staff;
+      vm.users = users;
       vm.percentage = 0;
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
@@ -112,6 +114,7 @@
         var end_time = vm.FormatTime(vm.filter.end_time);
         Meal
         .query({
+          'user': vm.filter.user,
           'start_date': start_date,
           'end_date': end_date,
           'start_time': start_time,

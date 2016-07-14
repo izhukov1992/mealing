@@ -16,6 +16,10 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
 
     def get_queryset(self):
+        only_today = self.request.query_params.get('only_today')
+        if only_today:
+            return Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user),
+                                       date=datetime.today())
         if self.request.user.is_staff:
             queryset = Meal.objects.all()
             user = self.request.query_params.get('user')
@@ -23,9 +27,6 @@ class MealViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(reporter=Reporter.objects.get(user=user))
         else:
             queryset = Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user))
-        only_today = self.request.query_params.get('only_today')
-        if only_today:
-            return queryset.filter(date=datetime.today())
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         if start_date:

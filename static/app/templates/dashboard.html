@@ -41,6 +41,15 @@
     <div class="well">
       <form class="form-horizontal">
         <fieldset>
+          <div class="form-group" ng-if="vm.staff">
+            <label for="start_date" class="col-lg-2 control-label">Switch User</label>
+            <div class="col-lg-10">
+              <select class="form-control" ng-model="vm.filter.user">
+                <option value="" selected>Switch User...</option>
+                <option ng-repeat="user in vm.users" value="{{user.id}}">{{user.username}}</option>
+              </select>
+            </div>
+          </div>
           <div class="form-group">
             <label for="start_date" class="col-lg-2 control-label">Start date</label>
             <div class="col-lg-10">
@@ -162,8 +171,8 @@
                   <span class="glyphicon glyphicon-collapse-down">
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a href="#" class="btn btn-link" ng-click="vm.EditMeal(meal)" data-toggle="modal" data-target="#meal_modal">Edit</a></li>
-                  <li><a href="#" class="btn btn-link" ng-click="vm.RemoveMeal(meal)">Remove</a></li>
+                  <li><a class="btn btn-link" ng-click="vm.EditMeal(meal)" data-toggle="modal" data-target="#meal_modal">Edit</a></li>
+                  <li><a class="btn btn-link" ng-click="vm.RemoveMeal(meal)">Remove</a></li>
                  </ul>
               </div>
             </td>

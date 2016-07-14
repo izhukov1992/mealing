@@ -38,6 +38,11 @@
               return Reporter.get({'id': $cookies.get('profile')}).$promise.then(function (response) {
                 return response;
               });
+            },
+            users: function(User) {
+              return User.query().$promise.then(function (response) {
+                return response;
+              });
             }
           }
         })

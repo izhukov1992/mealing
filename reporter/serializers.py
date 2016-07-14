@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('id', 'username', 'password')
 
     def create(self, validated_data):
         username = validated_data.get('username')
@@ -28,6 +28,8 @@ class ReporterSerializer(serializers.ModelSerializer):
     """
     Model serializer of Reporter model
     """
+    
+    is_staff = serializers.BooleanField(source="user.is_staff", read_only=True)
 
     class Meta:
         model = Reporter
