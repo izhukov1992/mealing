@@ -57,7 +57,8 @@
           'description': vm.add.description,
           'calories': vm.add.calories,
           'date': date,
-          'time': time
+          'time': time,
+          'user': vm.filter.user
         });
         meal.$save()
         .then(function(meal) {

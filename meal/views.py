@@ -1,4 +1,5 @@
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from reporter.models import Reporter
 from .models import Meal
 from .serializers import MealSerializer
@@ -46,6 +47,16 @@ class MealViewSet(viewsets.ModelViewSet):
                                             time__gt=end_time)
             queryset = queryset.filter(time__lte=end_time)
         return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(reporter=Reporter.objects.get(user=self.request.user))
+ 
+    def create(self, request):
+        user = request.data.get('user')
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            if not user or not request.user.is_staff:
+                reporter = Reporter.objects.get(user=request.user)
+            else:
+                reporter = Reporter.objects.get(user=user)
+            serializer.validated_data.update({'reporter': reporter})
+            meal = serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
