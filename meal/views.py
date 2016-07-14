@@ -17,7 +17,10 @@ class MealViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            queryset = self.queryset
+            queryset = Meal.objects.all()
+            user = self.request.query_params.get('user')
+            if user:
+                queryset = queryset.filter(reporter=Reporter.objects.get(user=user))
         else:
             queryset = Meal.objects.filter(reporter=Reporter.objects.get(user=self.request.user))
         only_today = self.request.query_params.get('only_today')

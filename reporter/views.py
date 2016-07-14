@@ -20,7 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.queryset
+            return User.objects.all()
         return [self.request.user]
 
 
@@ -35,7 +35,7 @@ class ReporterViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.queryset
+            return Reporter.objects.all()
         return Reporter.objects.filter(user=self.request.user)
 
  
