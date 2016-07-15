@@ -15,7 +15,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon">Daily Goal: </span>
-              <input type="number" class="form-control" id="limit" placeholder="Calorie limit" ng-model="vm.limit" ng-change="vm.SetCalorieLimit()" />
+              <input type="number" class="form-control" id="limit" placeholder="Calorie limit" ng-model="vm.reporter.limit" ng-change="vm.SetCalorieLimit()" />
             </div>
           </div>
         </fieldset>
@@ -32,10 +32,7 @@
       <form class="navbar-form navbar-right" role="filter">
         <fieldset>
           <div class="form-group" ng-if="vm.staff">
-            <select class="form-control" ng-model="vm.filter.user" ng-change="vm.FilterMeal()">
-              <option value="" selected>Switch User...</option>
-              <option ng-repeat="user in vm.users" value="{{user.id}}">{{user.username}}</option>
-            </select>
+            <select class="form-control" ng-model="vm.filter.reporter" ng-options="reporter.id as reporter.user.username for reporter in vm.reporters" ng-change="vm.SwitchProfile()"></select>
           </div>
         </fieldset>
       </form>

@@ -23,20 +23,35 @@ class UserViewSet(viewsets.ModelViewSet):
         return [self.request.user]
  
     def create(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data.get('username')
-            password = serializer.validated_data.get('password')
-            user = User.objects.create(username=username)
-            user.set_password(password)
-            user.save()
-            reporter = Reporter.objects.create(user=user)
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-            return Response(ReporterSerializer(reporter).data)
-        return Response(serializer.errors, status=400)
+        if request.user.is_anonymous():
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                username = serializer.validated_data.get('username')
+                password = serializer.validated_data.get('password')
+                user = User.objects.create(username=username)
+                user.set_password(password)
+                user.save()
+                reporter = Reporter.objects.create(user=user)
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                return Response(ReporterSerializer(reporter).data)
+            return Response(serializer.errors, status=400)
+        if request.user.is_staff:
+            role = request.data.get('role')
+            email = request.data.get('email')
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                username = serializer.validated_data.get('username')
+                password = serializer.validated_data.get('password')
+                user = User.objects.create(username=username, email=email)
+                user.set_password(password)
+                user.save()
+                reporter = Reporter.objects.create(user=user)
+                return Response(self.serializer_class(user).data)
+            return Response(serializer.errors, status=400)
+        return Response(status=400)
 
 
 class ReporterViewSet(viewsets.ModelViewSet):

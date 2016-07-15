@@ -18,16 +18,15 @@ class MealViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Meal.objects.all()
-        only_today = self.request.query_params.get('only_today')
-        if only_today:
-            return queryset.filter(reporter=Reporter.objects.get(user=self.request.user),
-                                   date=datetime.today())
         if self.request.user.is_staff:
-            user = self.request.query_params.get('user')
-            if user:
-                queryset = queryset.filter(reporter=Reporter.objects.get(user=user))
+            reporter = self.request.query_params.get('reporter')
+            if reporter:
+                queryset = queryset.filter(reporter=reporter)
         else:
             queryset = queryset.filter(reporter=Reporter.objects.get(user=self.request.user))
+        only_today = self.request.query_params.get('only_today')
+        if only_today:
+            return queryset.filter(date=datetime.today())
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         if start_date:
@@ -49,14 +48,12 @@ class MealViewSet(viewsets.ModelViewSet):
         return queryset
  
     def create(self, request):
-        user = request.data.get('user')
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            if not user or not request.user.is_staff:
-                reporter = Reporter.objects.get(user=request.user)
+            reporter = serializer.validated_data.get('reporter')
+            if reporter and request.user.is_staff:
+                meal = serializer.save(reporter=reporter)
             else:
-                reporter = Reporter.objects.get(user=user)
-            serializer.validated_data.update({'reporter': reporter})
-            meal = serializer.save()
+                meal = serializer.save(reporter=Reporter.objects.get(user=request.user))
             return Response(serializer.data)
         return Response(serializer.errors, status=400)

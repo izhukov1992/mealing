@@ -14,6 +14,8 @@ class UserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
         return request.user == obj
 
 
@@ -30,4 +32,6 @@ class ReporterUserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
         return request.user == obj.user

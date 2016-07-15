@@ -12,7 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password')
+        fields = ('id', 'username', 'email', 'is_staff', 'password')
+        read_only_fields = ('email', 'is_staff')
 
 
 class ReporterSerializer(serializers.ModelSerializer):
@@ -21,6 +22,17 @@ class ReporterSerializer(serializers.ModelSerializer):
     """
     
     is_staff = serializers.BooleanField(source="user.is_staff", read_only=True)
+
+    class Meta:
+        model = Reporter
+
+
+class ReporterSerializer(serializers.ModelSerializer):
+    """
+    Model serializer of Reporter model
+    """
+    
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Reporter

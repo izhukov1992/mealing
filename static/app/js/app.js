@@ -24,23 +24,13 @@
           controller: 'DashboardController',
           controllerAs: 'vm',
           resolve: {
-            meals: function (Meal) {
-              return Meal.query().$promise.then(function (response) {
-                return response;
-              });
-            },
-            today: function (Meal) {
-              return Meal.query({'only_today': true}).$promise.then(function (response) {
-                return response;
-              });
-            },
-            profile: function ($cookies, Reporter) {
+            reporter: function ($cookies, Reporter) {
               return Reporter.get({'id': $cookies.get('profile')}).$promise.then(function (response) {
                 return response;
               });
             },
-            users: function(User) {
-              return User.query().$promise.then(function (response) {
+            reporters: function(Reporter) {
+              return Reporter.query().$promise.then(function (response) {
                 return response;
               });
             }
@@ -50,7 +40,14 @@
           url: '/manager',
           templateUrl: 'static/app/templates/manager.html',
           controller: 'ManagerController',
-          controllerAs: 'vm'
+          controllerAs: 'vm',
+          resolve: {
+            users: function(User) {
+              return User.query().$promise.then(function (response) {
+                return response;
+              });
+            }
+          }
         })
         .state('auth', {
           url: '/auth',

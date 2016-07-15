@@ -5,17 +5,18 @@
     .module('mealing')
     .controller('DashboardController', DashboardController);
 
-    function DashboardController($scope, $cookies, DTOptionsBuilder, DTColumnDefBuilder, Reporter, Meal, meals, today, profile, users) {
+    function DashboardController($scope, DTOptionsBuilder, DTColumnDefBuilder, Reporter, Meal, reporter, reporters) {
       var vm = this;
       vm.add = {};
       vm.edit = {};
       vm.filter = {};
-      vm.meals = meals;
-      vm.today = today;
-      vm.limit = profile.limit;
-      vm.staff = profile.is_staff;
-      vm.users = users;
+      vm.meals = [];
+      vm.today = [];
+      vm.staff = reporter.user.is_staff;
+      vm.reporter = reporter;
+      vm.reporters = reporters;
       vm.percentage = 0;
+      vm.SwitchProfile = SwitchProfile;
       vm.SetCalorieLimit = SetCalorieLimit;
       vm.EatOut = EatOut;
       vm.EditMeal = EditMeal;
@@ -36,12 +37,22 @@
         DTColumnDefBuilder.newColumnDef(5).notSortable(),
       ];
       
-      vm.CalculateMeal();
+      vm.filter.reporter = vm.reporter.id;
+      vm.FilterMeal();
+      vm.TodayMeal();
+      
+      function SwitchProfile() {
+        Reporter.get({'id': vm.filter.reporter}).$promise.then(function (response) {
+          vm.reporter = response;
+          vm.FilterMeal();
+          vm.TodayMeal();
+        });
+      }
       
       function SetCalorieLimit() {
         var reporter = new Reporter({
-          'id': $cookies.get('profile'),
-          'limit': vm.limit
+          'id': vm.reporter.id,
+          'limit': vm.reporter.limit
         });
         reporter.$update()
         .then(function() {
@@ -58,7 +69,7 @@
           'calories': vm.add.calories,
           'date': date,
           'time': time,
-          'user': vm.filter.user
+          'reporter': vm.reporter.id
         });
         meal.$save()
         .then(function(meal) {
@@ -115,7 +126,7 @@
         var end_time = vm.FormatTime(vm.filter.end_time);
         Meal
         .query({
-          'user': vm.filter.user,
+          'reporter': vm.reporter.id,
           'start_date': start_date,
           'end_date': end_date,
           'start_time': start_time,
@@ -130,6 +141,7 @@
       function TodayMeal() {
         Meal
         .query({
+          'reporter': vm.reporter.id,
           'only_today': true
         })
         .$promise
@@ -143,7 +155,7 @@
         vm.percentage = vm.today.reduce(function (percentage, meal) {
           return percentage + meal.calories;
         }, 0);
-        vm.percentage = vm.percentage / vm.limit * 100;
+        vm.percentage = vm.percentage / vm.reporter.limit * 100;
       }
       
       function FormatDate(source_date) {
