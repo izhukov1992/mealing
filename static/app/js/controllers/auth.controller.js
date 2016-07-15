@@ -13,13 +13,10 @@
       vm.SignIn = SignIn;
       
       function SignUp() {
-        if (!vm.signup.password || !vm.signup.password_confirm || 
-             vm.signup.password != vm.signup.password_confirm) {
-          return;
-        }
         var auth = new User({
           'username': vm.signup.username,
-          'password': vm.signup.password
+          'password': vm.signup.password,
+          'password_confirm': vm.signup.password_confirm
         });
         auth.$save()
         .then(function(data) {
@@ -27,6 +24,8 @@
           console.log("signed in");
           $cookies.put('profile', data.id);
           $state.go('dashboard');
+        }, function(data) {
+          vm.signup.errors = data.data;
         });
       }
       
@@ -40,6 +39,8 @@
           console.log("signed in");
           $cookies.put('profile', data.id);
           $state.go('dashboard');
+        }, function(data) {
+          vm.signin.errors = data.data;
         });
       }
     }

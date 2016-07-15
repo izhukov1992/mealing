@@ -23,36 +23,35 @@ class UserViewSet(viewsets.ModelViewSet):
         return [self.request.user]
  
     def create(self, request):
+        username = request.data.get('username')
+        if username and User.objects.filter(username=username):
+            return Response({'username': ["Oops! That username is not available. Try a different username.",]}, status=400)
+        role = request.data.get('role')
+        email = request.data.get('email')
+        password_confirm = request.data.get('password_confirm')
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+        password = serializer.validated_data.get('password')
         if request.user.is_anonymous():
-            serializer = self.serializer_class(data=request.data)
-            if serializer.is_valid():
-                username = serializer.validated_data.get('username')
-                password = serializer.validated_data.get('password')
-                user = User.objects.create(username=username)
-                user.set_password(password)
-                user.save()
-                reporter = Reporter.objects.create(user=user)
-                user = authenticate(username=username, password=password)
-                if user is not None:
-                    if user.is_active:
-                        login(request, user)
-                return Response(ReporterSerializer(reporter).data)
-            return Response(serializer.errors, status=400)
+            if not password == password_confirm:
+                return Response({'details': ["Password confirmation doesn\'t match.",]}, status=400)
+        username = serializer.validated_data.get('username')
+        if email:
+            user = User.objects.create(username=username, email=email)
+        else:
+            user = User.objects.create(username=username)
+        user.set_password(password)
+        user.save()
+        reporter = Reporter.objects.create(user=user)
+        if request.user.is_anonymous():
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+            return Response(ReporterSerializer(reporter).data)
         if request.user.is_staff:
-            role = request.data.get('role')
-            email = request.data.get('email')
-            serializer = self.serializer_class(data=request.data)
-            if serializer.is_valid():
-                username = serializer.validated_data.get('username')
-                password = serializer.validated_data.get('password')
-                user = User.objects.create(username=username, email=email)
-                user.set_password(password)
-                user.save()
-                reporter = Reporter.objects.create(user=user)
-                return Response(self.serializer_class(user).data)
-            return Response(serializer.errors, status=400)
+            return Response(self.serializer_class(user).data)
         return Response(status=400)
-
 
 class ReporterViewSet(viewsets.ModelViewSet):
     """
@@ -80,12 +79,11 @@ class AuthView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                reporter = Reporter.objects.get(user=user)
-                return Response(ReporterSerializer(reporter).data)
-        return Response(status=400)
+        if user:
+            login(request, user)
+            reporter = Reporter.objects.get(user=user)
+            return Response(ReporterSerializer(reporter).data)
+        return Response({'details': ["Oops! Our system does not recognize that username or password.",]}, status=400)
  
     def delete(self, request):
         logout(request)
