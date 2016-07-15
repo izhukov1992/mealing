@@ -33,3 +33,14 @@ table.uib-daypicker tbody th {
 ul, ol {
   margin-bottom: 4px;
 }
+
+@media (min-width: 768px) {
+  .navbar-form {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.nav.progress {
+   min-width:250px;
+   margin-top:15px;
+}

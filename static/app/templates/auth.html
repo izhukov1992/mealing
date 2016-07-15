@@ -1,54 +1,66 @@
-<div class="well">
-  <form class="form-horizontal">
-    <legend>Sign Up</legend>
-    <fieldset>
-      <div class="form-group">
-        <label for="signup_username" class="col-lg-2 control-label">Username</label>
-        <div class="col-lg-10">
-          <input type="text" class="form-control" id="signup_username" placeholder="Username" ng-model="vm.signup.username" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="signup_password" class="col-lg-2 control-label">Password</label>
-        <div class="col-lg-10">
-          <input type="password" class="form-control" id="signup_password" placeholder="Password" ng-model="vm.signup.password" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="password_confirm" class="col-lg-2 control-label">Confirm Password</label>
-        <div class="col-lg-10">
-          <input type="password" class="form-control" id="password_confirm" placeholder="Confirm Password" ng-model="vm.signup.password_confirm" />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-lg-10 col-lg-offset-2">
-          <button class="btn btn-primary" ng-click="vm.SignUp()">Sign Up</button>
-        </div>
-      </div>
-    </fieldset>
-  </form>
-</div>
-<div class="well">
-  <form class="form-horizontal">
-    <legend>Sign In</legend>
-    <fieldset>
-      <div class="form-group">
-        <label for="signin_username" class="col-lg-2 control-label">Username</label>
-        <div class="col-lg-10">
-          <input type="text" class="form-control" id="signin_username" placeholder="Username" ng-model="vm.signin.username" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="signin_password" class="col-lg-2 control-label">Password</label>
-        <div class="col-lg-10">
-          <input type="password" class="form-control" id="signin_password" placeholder="Password" ng-model="vm.signin.password" />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-lg-10 col-lg-offset-2">
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" ui-sref="dashboard"><span class="glyphicon glyphicon-cutlery"></span> Mealing</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <form class="navbar-form navbar-right" role="signin">
+        <fieldset>
+          <div class="form-group">
+            <input type="text" class="form-control" id="signin_username" placeholder="Username" ng-model="vm.signin.username" />
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="signin_password" placeholder="Password" ng-model="vm.signin.password" />
+          </div>
           <button class="btn btn-primary" ng-click="vm.SignIn()">Sign In</button>
-        </div>
+        </fieldset>
+      </form>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<div class="container theme-showcase">
+  <div class="well">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <img src="https://static.posters.cz/image/1300/21641.jpg" class="img-responsive" />
       </div>
-    </fieldset>
-  </form>
-</div>
+      <div class="col-xs-12 col-sm-6">
+        <form class="form-horizontal" role="signup">
+          <legend>Sign Up With Email</legend>
+          <fieldset>
+            <div class="form-group">
+              <label for="signup_username" class="col-lg-2 control-label">Username</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" id="signup_username" placeholder="Username" ng-model="vm.signup.username" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="signup_password" class="col-lg-2 control-label">Password</label>
+              <div class="col-lg-10">
+                <input type="password" class="form-control" id="signup_password" placeholder="Password" ng-model="vm.signup.password" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password_confirm" class="col-lg-2 control-label">Confirm Password</label>
+              <div class="col-lg-10">
+                <input type="password" class="form-control" id="password_confirm" placeholder="Confirm Password" ng-model="vm.signup.password_confirm" />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-lg-10 col-lg-offset-2">
+                <button class="btn btn-primary" ng-click="vm.SignUp()">Sign Up</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> <!-- /container -->
