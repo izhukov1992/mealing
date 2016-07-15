@@ -63,7 +63,7 @@
         meal.$save()
         .then(function(meal) {
           console.log("mealed");
-          vm.meals.push(meal);
+          vm.FilterMeal();
           vm.TodayMeal();
         });
       }
