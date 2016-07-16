@@ -86,7 +86,14 @@ class ReporterViewSet(viewsets.ModelViewSet):
             return Reporter.objects.all()
         return Reporter.objects.filter(user=self.request.user)
 
- 
+    def perform_create(self, instance):
+        user = instance.validated_data.get('user')
+        if user:
+            instance.save()
+        else:
+            instance.save(user=self.request.user)
+
+
 class AuthView(APIView):
     """
     View of authentication API
