@@ -21,17 +21,6 @@ class ReporterSerializer(serializers.ModelSerializer):
     Model serializer of Reporter model
     """
     
-    is_staff = serializers.BooleanField(source="user.is_staff", read_only=True)
-
-    class Meta:
-        model = Reporter
-
-
-class ReporterSerializer(serializers.ModelSerializer):
-    """
-    Model serializer of Reporter model
-    """
-    
     user = UserSerializer(read_only=True)
 
     class Meta:

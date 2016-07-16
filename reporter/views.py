@@ -26,8 +26,8 @@ class UserViewSet(viewsets.ModelViewSet):
         username = request.data.get('username')
         if username and User.objects.filter(username=username):
             return Response({'username': ["Oops! That username is not available. Try a different username.",]}, status=400)
-        role = request.data.get('role')
         email = request.data.get('email')
+        role = request.data.get('role')
         password_confirm = request.data.get('password_confirm')
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
@@ -43,7 +43,10 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.create(username=username)
         user.set_password(password)
         user.save()
-        reporter = Reporter.objects.create(user=user)
+        if role:
+            reporter = Reporter.objects.create(user=user, role=role)
+        else:
+            reporter = Reporter.objects.create(user=user)
         if request.user.is_anonymous():
             user = authenticate(username=username, password=password)
             if user:
@@ -52,6 +55,22 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.user.is_staff:
             return Response(self.serializer_class(user).data)
         return Response(status=400)
+
+    def perform_update(self, instance):
+        email = self.request.data.get('email')
+        role = self.request.data.get('role')
+        password = self.request.data.get('password')
+        user = instance.save(email=email)
+        user.set_password(password)
+        user.save()
+        reporter = Reporter.objects.get(user=user)
+        reporter.role = role
+        reporter.save()
+
+    def perform_destroy(self, instance):
+        reporter = Reporter.objects.get(user=instance).delete()
+        super(UserViewSet, self).perform_destroy(instance)
+
 
 class ReporterViewSet(viewsets.ModelViewSet):
     """

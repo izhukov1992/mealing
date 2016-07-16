@@ -33,10 +33,7 @@
                     <input type="text" class="form-control input-sm" placeholder="Email..." ng-model="vm.add.email" />
                   </td>
                   <td>
-                    <select class="form-control input-sm" ng-model="vm.add.role">
-                      <option value="" selected>Role...</option>
-                      <option ng-repeat="role in vm.roles" value="{{role.id}}">{{role.value}}</option>
-                    </select>
+                    <select class="form-control input-sm" ng-model="vm.add.role" ng-options="role.id as role.value for role in vm.roles"></select>
                   </td>
                   <td>
                     <input type="password" class="form-control input-sm" placeholder="Password..." ng-model="vm.add.password" />
@@ -57,18 +54,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="user in vm.users">
+            <tr ng-repeat="reporter in vm.reporters">
               <td>
-                <span>{{user.id}}</span>
+                <span>{{reporter.user.id}}</span>
               </td>
               <td>
-                <span>{{user.username}}</span>
+                <span>{{reporter.user.username}}</span>
               </td>
               <td>
-                <span>{{user.email}}</span>
+                <span>{{reporter.user.email}}</span>
               </td>
               <td>
-                <span>{{user.role}}</span>
+                <span>{{vm.roles[reporter.role].value}}</span>
               </td>
               <td></td>
               <td>
@@ -77,8 +74,8 @@
                     <span class="glyphicon glyphicon-collapse-down">
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="btn btn-link" ng-click="vm.EditUser(user)" data-toggle="modal" data-target="#user_modal">Edit</a></li>
-                    <li><a class="btn btn-link" ng-click="vm.RemoveUser(user)">Remove</a></li>
+                    <li><a class="btn btn-link" ng-click="vm.EditUser(reporter)" data-toggle="modal" data-target="#user_modal">Edit</a></li>
+                    <li><a class="btn btn-link" ng-click="vm.RemoveUser(reporter)">Remove</a></li>
                    </ul>
                 </div>
               </td>
@@ -104,22 +101,19 @@
                 <form>
                   <fieldset>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Name..." ng-model="vm.edit.username" />
+                      <input type="text" class="form-control input-sm" placeholder="Name..." ng-model="vm.edit.user.username" />
                     </td>
                     <td>
-                      <input type="text" class="form-control input-sm" placeholder="Email..." ng-model="vm.edit.email" />
+                      <input type="text" class="form-control input-sm" placeholder="Email..." ng-model="vm.edit.user.email" />
                     </td>
                     <td>
-                      <input type="password" class="form-control input-sm" placeholder="Password..." ng-model="vm.edit.password" />
+                      <select class="form-control input-sm" ng-model="vm.edit.role" ng-options="role.id as role.value for role in vm.roles"></select>
                     </td>
                     <td>
-                      <select class="form-control input-sm" ng-model="vm.edit.role">
-                        <option value="" selected>Role...</option>
-                        <option ng-repeat="role in vm.roles" value="{{role.id}}">{{role.value}}</option>
-                      </select>
+                      <input type="password" class="form-control input-sm" placeholder="Password..." ng-model="vm.edit.user.password" />
                     </td>
                     <td>
-                      <button class="btn btn-sm btn-success" ng-click="vm.SaveUser()" ng-disabled="!vm.edit.username || !vm.edit.email || !vm.edit.role || !vm.edit.password">Add User</button>
+                      <button class="btn btn-sm btn-success" data-dismiss="modal" ng-click="vm.SaveUser()" ng-disabled="!vm.edit.user.username || !vm.edit.user.email || !vm.edit.user.password || !vm.edit.role">Save User</button>
                     </td>
                   </fieldset>
                 </form>

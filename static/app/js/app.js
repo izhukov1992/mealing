@@ -46,6 +46,11 @@
               return User.query().$promise.then(function (response) {
                 return response;
               });
+            },
+            reporters: function(Reporter) {
+              return Reporter.query().$promise.then(function (response) {
+                return response;
+              });
             }
           }
         })
