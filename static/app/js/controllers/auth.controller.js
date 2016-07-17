@@ -23,6 +23,8 @@
           console.log("signed up");
           console.log("signed in");
           $cookies.put('profile', data.id);
+          $cookies.put('role', data.role);
+          $cookies.put('staff', data.user.is_staff);
           $state.go('dashboard');
         }, function(data) {
           vm.signup.errors = data.data;
@@ -38,6 +40,8 @@
         .then(function(data) {
           console.log("signed in");
           $cookies.put('profile', data.id);
+          $cookies.put('role', data.role);
+          $cookies.put('staff', data.user.is_staff);
           $state.go('dashboard');
         }, function(data) {
           vm.signin.errors = data.data;

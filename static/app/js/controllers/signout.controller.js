@@ -11,6 +11,8 @@
       .then(function() {
         console.log("signed out")
         $cookies.remove('profile');
+        $cookies.remove('role');
+        $cookies.remove('staff');
         $state.go('auth');
       });
     }

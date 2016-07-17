@@ -73,13 +73,18 @@
         if (toState.name == 'auth') {
           if ($cookies.get('profile')) {
             event.preventDefault();
-            $state.go('dashboard');
           }
         }
         else {
           if (!$cookies.get('profile')) {
             event.preventDefault();
             $state.go('auth');
+            return;
+          }
+          if (toState.name == 'manager') {
+            if ($cookies.get('staff') != 'true' && $cookies.get('role') != 2 && $cookies.get('role') != 3) {
+              event.preventDefault();
+            }
           }
         }
       });

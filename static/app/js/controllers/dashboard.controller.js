@@ -12,9 +12,10 @@
       vm.filter = {};
       vm.meals = [];
       vm.today = [];
-      vm.staff = reporter.user.is_staff;
-      vm.reporter = reporter;
       vm.reporters = reporters;
+      vm.reporter = reporter;
+      vm.role = reporter.role;
+      vm.staff = reporter.user.is_staff;
       vm.percentage = 0;
       vm.SwitchProfile = SwitchProfile;
       vm.SetCalorieLimit = SetCalorieLimit;

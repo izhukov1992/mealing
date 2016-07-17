@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -63,6 +64,9 @@ class UserViewSet(viewsets.ModelViewSet):
         user = instance.save(email=email)
         user.set_password(password)
         user.save()
+        if user == self.request.user:
+            user = authenticate(username=user.username, password=password)
+            login(self.request, user)
         reporter = Reporter.objects.get(user=user)
         reporter.role = role
         reporter.save()

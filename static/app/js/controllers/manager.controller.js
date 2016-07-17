@@ -47,6 +47,7 @@
       
       function EditUser(instance) {
         angular.copy(instance, vm.edit);
+        delete vm.edit.user.password;
       }
       
       function SaveUser() {
