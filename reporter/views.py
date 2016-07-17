@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Reporter
@@ -21,7 +21,10 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
             return User.objects.all()
-        return [self.request.user]
+        reporter = Reporter.objects.get(user=self.request.user)
+        if int(reporter.role) == 3:
+            return User.objects.all()
+        return User.objects.filter(id=self.request.user.id)
  
     def create(self, request):
         username = request.data.get('username')
@@ -87,6 +90,9 @@ class ReporterViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
+            return Reporter.objects.all()
+        reporter = Reporter.objects.get(user=self.request.user)
+        if int(reporter.role) == 3 or int(reporter.role) == 2:
             return Reporter.objects.all()
         return Reporter.objects.filter(user=self.request.user)
 

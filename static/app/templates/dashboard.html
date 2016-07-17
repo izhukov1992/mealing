@@ -31,7 +31,7 @@
       </ul>
       <form class="navbar-form navbar-right" role="filter">
         <fieldset>
-          <div class="form-group" ng-if="vm.staff">
+          <div class="form-group" ng-if="vm.staff || vm.role=='3' || vm.role=='2'">
             <select class="form-control" ng-model="vm.filter.reporter" ng-options="reporter.id as reporter.user.username for reporter in vm.reporters" ng-change="vm.SwitchProfile()"></select>
           </div>
         </fieldset>

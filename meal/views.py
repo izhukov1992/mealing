@@ -18,7 +18,8 @@ class MealViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Meal.objects.all()
-        if self.request.user.is_staff:
+        reporter = Reporter.objects.get(user=self.request.user)
+        if self.request.user.is_staff or int(reporter.role) == 3 or int(reporter.role) == 2:
             reporter = self.request.query_params.get('reporter')
             if reporter:
                 queryset = queryset.filter(reporter=reporter)

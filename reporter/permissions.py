@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from .models import Reporter
 
 
 class UserPermissions(permissions.BasePermission):
@@ -15,6 +16,9 @@ class UserPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
+            return True
+        reporter = Reporter.objects.get(user=request.user)
+        if int(reporter.role) == 3:
             return True
         return request.user == obj
 
@@ -34,4 +38,11 @@ class ReporterUserPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
+        reporter = Reporter.objects.get(user=request.user)
+        if int(reporter.role) == 3:
+            return True
+        if int(reporter.role) == 2:
+            if request.method == "GET":
+                return True
+            return False
         return request.user == obj.user
