@@ -82,9 +82,10 @@
             return;
           }
           if (toState.name == 'manager') {
-            if ($cookies.get('staff') != 'true' && $cookies.get('role') != 2 && $cookies.get('role') != 3) {
-              event.preventDefault();
+            if ($cookies.get('staff') == 'true' || $cookies.get('role') == 3) {
+              return;
             }
+            event.preventDefault();
           }
         }
       });
