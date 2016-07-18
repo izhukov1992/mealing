@@ -123,7 +123,7 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.date" uib-datepicker-popup is-open="vm.dp_add" close-text="Close" />
+                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_add" enable-time="false" />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-xs btn-default" ng-click="vm.dp_add ? vm.dp_add=false : vm.dp_add=true"><i class="glyphicon glyphicon-calendar"></i></button>
                       </span>
@@ -131,7 +131,7 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.time" datetime-picker="HH:mm:ss" is-open="vm.tp_add" enable-date="false" close-on-selection="true" />
+                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.time" datetime-picker="HH:mm:ss" is-open="vm.tp_add" enable-date="false" />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-xs btn-default" ng-click="vm.tp_add ? vm.tp_add=false : vm.tp_add=true"><i class="glyphicon glyphicon-time"></i></button>
                       </span>
@@ -209,7 +209,7 @@
                     </td>
                     <td>
                       <div class="input-group">
-                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date" uib-datepicker-popup is-open="vm.dp_edit" close-text="Close" />
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_edit" enable-time="false" />
                         <span class="input-group-btn">
                           <button type="button" class="btn btn-xs btn-default" ng-click="vm.dp_edit ? vm.dp_edit=false : vm.dp_edit=true"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
