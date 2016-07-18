@@ -20,11 +20,11 @@ class MealViewSet(viewsets.ModelViewSet):
         queryset = Meal.objects.all()
         reporter = Reporter.objects.get(user=self.request.user)
         if self.request.user.is_staff or int(reporter.role) == 3 or int(reporter.role) == 2:
-            reporter = self.request.query_params.get('reporter')
-            if reporter:
-                queryset = queryset.filter(reporter=reporter)
+            reporter_param = self.request.query_params.get('reporter')
+            if reporter_param:
+                queryset = queryset.filter(reporter=reporter_param)
         else:
-            queryset = queryset.filter(reporter=Reporter.objects.get(user=self.request.user))
+            queryset = queryset.filter(reporter=reporter)
         only_today = self.request.query_params.get('only_today')
         if only_today:
             return queryset.filter(date=datetime.today())
@@ -51,10 +51,14 @@ class MealViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            reporter = serializer.validated_data.get('reporter')
-            if reporter and request.user.is_staff:
-                meal = serializer.save(reporter=reporter)
+            reporter = Reporter.objects.get(user=request.user)
+            if request.user.is_staff or int(reporter.role) == 3 or int(reporter.role) == 2:
+                reporter_param = serializer.validated_data.get('reporter')
+                if reporter_param:
+                    meal = serializer.save(reporter=reporter_param)
+                else:
+                    meal = serializer.save(reporter=reporter)
             else:
-                meal = serializer.save(reporter=Reporter.objects.get(user=request.user))
+                meal = serializer.save(reporter=reporter)
             return Response(serializer.data)
         return Response(serializer.errors, status=400)

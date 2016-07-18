@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Reporter
@@ -19,10 +18,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return User.objects.all()
         reporter = Reporter.objects.get(user=self.request.user)
-        if int(reporter.role) == 3:
+        if self.request.user.is_staff or int(reporter.role) == 3:
             return User.objects.all()
         return User.objects.filter(id=self.request.user.id)
  
@@ -56,7 +53,8 @@ class UserViewSet(viewsets.ModelViewSet):
             if user:
                 login(request, user)
             return Response(ReporterSerializer(reporter).data)
-        if request.user.is_staff:
+        reporter = Reporter.objects.get(user=self.request.user)
+        if request.user.is_staff or int(reporter.role) == 3:
             return Response(self.serializer_class(user).data)
         return Response(status=400)
 

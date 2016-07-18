@@ -15,10 +15,8 @@ class UserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
-            return True
         reporter = Reporter.objects.get(user=request.user)
-        if int(reporter.role) == 3:
+        if request.user.is_staff or int(reporter.role) == 3:
             return True
         return request.user == obj
 
@@ -36,10 +34,8 @@ class ReporterUserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
-            return True
         reporter = Reporter.objects.get(user=request.user)
-        if int(reporter.role) == 3:
+        if request.user.is_staff or int(reporter.role) == 3:
             return True
         if int(reporter.role) == 2:
             if request.method == "GET":
