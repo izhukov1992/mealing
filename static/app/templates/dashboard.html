@@ -63,7 +63,7 @@
               <label for="start_date" class="col-lg-2 control-label">Start date</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" id="start_date" placeholder="Start Date..." ng-model="vm.filter.start_date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_filter_start" enable-time="false" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" id="start_date" placeholder="Start Date..." ng-model="vm.filter.start_date" datetime-picker="yyyy-MM-dd" ng-model-options="{timezone:'UTC'}" is-open="vm.dp_filter_start" enable-time="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="vm.dp_filter_start ? vm.dp_filter_start=false : vm.dp_filter_start=true"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -85,7 +85,7 @@
               <label for="end_date" class="col-lg-2 control-label">End date</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" id="end_date" placeholder="End Date..." ng-model="vm.filter.end_date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_filter_end" enable-time="false" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" id="end_date" placeholder="End Date..." ng-model="vm.filter.end_date" datetime-picker="yyyy-MM-dd" ng-model-options="{timezone:'UTC'}" is-open="vm.dp_filter_end" enable-time="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="vm.dp_filter_end ? vm.dp_filter_end=false : vm.dp_filter_end=true"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -123,7 +123,7 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_add" enable-time="false" />
+                      <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.add.date" datetime-picker="yyyy-MM-dd" ng-model-options="{timezone:'UTC'}" is-open="vm.dp_add" enable-time="false" />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-xs btn-default" ng-click="vm.dp_add ? vm.dp_add=false : vm.dp_add=true"><i class="glyphicon glyphicon-calendar"></i></button>
                       </span>
@@ -209,7 +209,7 @@
                     </td>
                     <td>
                       <div class="input-group">
-                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_edit" enable-time="false" />
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.date" datetime-picker="yyyy-MM-dd" ng-model-options="{timezone:'UTC'}" is-open="vm.dp_edit" enable-time="false" />
                         <span class="input-group-btn">
                           <button type="button" class="btn btn-xs btn-default" ng-click="vm.dp_edit ? vm.dp_edit=false : vm.dp_edit=true"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
