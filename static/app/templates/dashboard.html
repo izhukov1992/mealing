@@ -63,7 +63,7 @@
               <label for="start_date" class="col-lg-2 control-label">Start date</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" id="start_date" placeholder="Start Date..." ng-model="vm.filter.start_date" uib-datepicker-popup is-open="vm.dp_filter_start" close-text="Close" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" id="start_date" placeholder="Start Date..." ng-model="vm.filter.start_date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_filter_start" enable-time="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="vm.dp_filter_start ? vm.dp_filter_start=false : vm.dp_filter_start=true"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -74,7 +74,7 @@
               <label for="start_date" class="col-lg-2 control-label">Start time</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Start Time..." ng-model="vm.filter.start_time" datetime-picker="HH:mm:ss" is-open="vm.tp_filter_start" enable-date="false" close-on-selection="true" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" placeholder="Start Time..." ng-model="vm.filter.start_time" datetime-picker="HH:mm:ss" is-open="vm.tp_filter_start" enable-date="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-default" ng-click="vm.tp_filter_start ? vm.tp_filter_start=false : vm.tp_filter_start=true"><i class="glyphicon glyphicon-time"></i></button>
                   </span>
@@ -85,7 +85,7 @@
               <label for="end_date" class="col-lg-2 control-label">End date</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" id="end_date" placeholder="End Date..." ng-model="vm.filter.end_date" uib-datepicker-popup is-open="vm.dp_filter_end" close-text="Close" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" id="end_date" placeholder="End Date..." ng-model="vm.filter.end_date" datetime-picker="yyyy-MM-dd" is-open="vm.dp_filter_end" enable-time="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="vm.dp_filter_end ? vm.dp_filter_end=false : vm.dp_filter_end=true"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -96,7 +96,7 @@
               <label for="start_date" class="col-lg-2 control-label">End time</label>
               <div class="col-lg-10">
                 <div class="input-group">
-                  <input type="text" class="form-control" placeholder="End Time..." ng-model="vm.filter.end_time" datetime-picker="HH:mm:ss" is-open="vm.tp_filter_end" enable-date="false" close-on-selection="true" ng-change="vm.FilterMeal()" />
+                  <input type="text" class="form-control" placeholder="End Time..." ng-model="vm.filter.end_time" datetime-picker="HH:mm:ss" is-open="vm.tp_filter_end" enable-date="false" ng-change="vm.FilterMeal()" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-default" ng-click="vm.tp_filter_end ? vm.tp_filter_end=false : vm.tp_filter_end=true"><i class="glyphicon glyphicon-time"></i></button>
                   </span>
@@ -217,7 +217,7 @@
                     </td>
                     <td>
                       <div class="input-group">
-                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.time" datetime-picker="HH:mm:ss" is-open="vm.tp_edit" enable-date="false" close-on-selection="true" />
+                        <input type="text" class="form-control input-sm" placeholder="Date..." ng-model="vm.edit.time" datetime-picker="HH:mm:ss" is-open="vm.tp_edit" enable-date="false" />
                         <span class="input-group-btn">
                           <button type="button" class="btn btn-xs btn-default" ng-click="vm.tp_edit ? vm.tp_edit=false : vm.tp_edit=true"><i class="glyphicon glyphicon-time"></i></button>
                         </span>
