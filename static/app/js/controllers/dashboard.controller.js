@@ -65,6 +65,14 @@
       function EatOut() {
         var date = vm.FormatDate(vm.add.date);
         var time = vm.FormatTime(vm.add.time);
+        console.log('Add:');
+        console.log({
+          'description': vm.add.description,
+          'calories': vm.add.calories,
+          'date': date,
+          'time': time,
+          'reporter': vm.reporter.id
+        });
         var meal = new Meal({
           'description': vm.add.description,
           'calories': vm.add.calories,
@@ -93,6 +101,14 @@
       function SaveMeal() {
         var date = vm.FormatDate(vm.edit.date);
         var time = vm.FormatTime(vm.edit.time);
+        console.log('Update:');
+        console.log({
+          'id': vm.edit.id,
+          'description': vm.edit.description,
+          'calories': vm.edit.calories,
+          'date': date,
+          'time': time
+        });
         var meal = new Meal({
           'id': vm.edit.id,
           'description': vm.edit.description,
@@ -125,6 +141,14 @@
         var end_date = vm.FormatDate(vm.filter.end_date);
         var start_time = vm.FormatTime(vm.filter.start_time);
         var end_time = vm.FormatTime(vm.filter.end_time);
+        console.log('Filter:');
+        console.log({
+          'reporter': vm.reporter.id,
+          'start_date': start_date,
+          'end_date': end_date,
+          'start_time': start_time,
+          'end_time': end_time
+        });
         Meal
         .query({
           'reporter': vm.reporter.id,
@@ -136,10 +160,15 @@
         .$promise
         .then(function (data) {
           vm.meals = data;
+          console.log('Results:');
+          angular.forEach(data, function(item) {
+            console.log(item);
+          });
         });
       }
       
       function TodayMeal() {
+        console.log('Filter today:');
         Meal
         .query({
           'reporter': vm.reporter.id,
@@ -149,6 +178,10 @@
         .then(function (data) {
           vm.today = data;
           vm.CalculateMeal();
+          console.log('Results:');
+          angular.forEach(data, function(item) {
+            console.log(item);
+          });
         });
       }
       
@@ -165,7 +198,6 @@
           date = new Date(source_date);
           date = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
         }
-        console.log(date);
         return date
       }
       
