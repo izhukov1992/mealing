@@ -163,8 +163,9 @@
         var date;
         if (Date.parse(source_date)) {
           date = new Date(source_date);
-          date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+          date = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
         }
+        console.log(date);
         return date
       }
       
