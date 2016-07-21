@@ -146,9 +146,7 @@ class UserAPITestCase(TestCase):
         user = User.objects.create(username="username_correct")
         user.set_password("password_correct")
         user.save()
-        reporter = Reporter.objects.create(user=user)
-        reporter.role = 3
-        reporter.save()
+        reporter = Reporter.objects.create(user=user, role=3)
 
     def test_user_crud(self):
         ## post
@@ -181,7 +179,7 @@ class UserAPITestCase(TestCase):
         response = self.client.get("/api/v1/reporter/3/")
         self.assertEqual(response.status_code, 200)
         
-        # sign in as superuser
+        # sign in as admin
         response = self.client.delete("/api/v1/auth/")
         self.assertEqual(response.status_code, 200)
         response = self.client.post("/api/v1/auth/", '{"username": "username_correct", "password": "password_correct"}', 'application/json')
