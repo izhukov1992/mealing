@@ -115,6 +115,7 @@ class AuthView(APIView):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
+            reporter = Reporter.objects.get_or_create(user=user, role=(3 if user.is_staff else 1))
             reporter = Reporter.objects.get(user=user)
             return Response(ReporterSerializer(reporter).data)
         return Response({'details': ["Oops! Our system does not recognize that username or password.",]}, status=400)
