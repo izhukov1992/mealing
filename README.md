@@ -19,19 +19,16 @@
 ## Heroku Installation
 
 * https://dashboard.heroku.com/apps -> New -> create new app.
-* https://dashboard.heroku.com/apps/<app_name>/resources -> Add-ons enter and add Heroku Postgres.
-* https://dashboard.heroku.com/apps/<app_name>/settings -> Buildpacks -> Add buildpack -> Python -> Save changes.
-* https://dashboard.heroku.com/apps/<app_name>/settings -> Buildpacks -> Add buildpack -> nodejs -> Save changes.
-* https://dashboard.heroku.com/apps/<app_name>/deploy -> Deployment method -> GitHub. Enter name, enter repo name, press Search, press connect, choose branch, press Deploy branch, wait for deploying.
-* https://<app_name>.herokuapp.com
+* https://dashboard.heroku.com/apps/APP_NAME/resources -> Add-ons enter and add Heroku Postgres.
+* https://dashboard.heroku.com/apps/APP_NAME/settings -> Buildpacks -> Add buildpack -> Python -> Save changes.
+* https://dashboard.heroku.com/apps/APP_NAME/settings -> Buildpacks -> Add buildpack -> nodejs -> Save changes.
+* https://dashboard.heroku.com/apps/APP_NAME/deploy -> Deployment method -> GitHub. Enter name, enter repo name, press Search, press connect, choose branch, press Deploy branch, wait for deploying.
+* https://APP_NAME.herokuapp.com
 * `wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh`
 * `heroku login`
 * `heroku run migrate`
 * `heroku run python manage.py migrate`
 * `heroku run python manage.py createsuperuser`
-
-## First step
-* /api/v1/reporter/ -> Post new reporter for superuser.
 
 ## Testing
 * `python manage.py test`
@@ -49,6 +46,6 @@
 * /api/v1/user/
 * /api/v1/reporter/
 * /api/v1/meal/
-* /api/v1/user/%id%/
-* /api/v1/reporter/%id%/
-* /api/v1/meal/%id%/
+* /api/v1/user/ID/
+* /api/v1/reporter/ID/
+* /api/v1/meal/ID/
