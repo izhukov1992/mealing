@@ -8,8 +8,8 @@
 * `git clone https://github.com/izhukov1992/ct.git`
 * remove psycopg2 and dj-database-url from requirements.txt.
 * remove lines from mealing/settings.py:
-** import dj_database_url
-** DATABASES['default'] =  dj_database_url.config()
+  * import dj_database_url
+  * DATABASES['default'] =  dj_database_url.config()
 * `bower install` or `sudo bower install --allow-root`
 * `python pip install -r requirements.txt`
 * `python manage.py migrate`
@@ -31,21 +31,24 @@
 * `heroku run python manage.py createsuperuser`
 
 ## First step
-* hostname/api/v1/reporter/ -> Post new reporter for superuser.
+* /api/v1/reporter/ -> Post new reporter for superuser.
+
+## Testing
+* `python manage.py test`
 
 ## App references
 
-* hostname/#!/auth
-* hostname/#!/
-* hostname/#!/manager
+* /#!/auth
+* /#!/
+* /#!/manager
 
 ## API references
 
-* hostname/api/v1/
-* hostname/api/v1/auth/
-* hostname/api/v1/user/
-* hostname/api/v1/reporter/
-* hostname/api/v1/meal/
-* hostname/api/v1/user/<id>/
-* hostname/api/v1/reporter/<id>/
-* hostname/api/v1/meal/<id>/
+* /api/v1/
+* /api/v1/auth/
+* /api/v1/user/
+* /api/v1/reporter/
+* /api/v1/meal/
+* /api/v1/user/%id%/
+* /api/v1/reporter/%id%/
+* /api/v1/meal/%id%/
