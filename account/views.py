@@ -3,14 +3,15 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Reporter
-from .serializers import UserSerializer, ReporterSerializer
-from .permissions import UserPermissions, ReporterUserPermissions
+
+from .constants import CLIENT, TRAINER, MODERATOR
+from .models import Account
+from .serializers import UserSerializer, AccountSerializer
+from .permissions import UserPermissions, AccountUserPermissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    View set of User API
+    """View set of User API
     """
 
     permission_classes = [UserPermissions,]
@@ -18,8 +19,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        reporter = Reporter.objects.get(user=self.request.user)
-        if self.request.user.is_staff or int(reporter.role) == 3:
+        account = Account.objects.get(user=self.request.user)
+        if self.request.user.is_staff or account.role == MODERATOR:
             return User.objects.all()
         return User.objects.filter(id=self.request.user.id)
  
@@ -34,7 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
         password = serializer.validated_data.get('password')
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             if not password == password_confirm:
                 return Response({'details': ["Password confirmation doesn\'t match.",]}, status=400)
         username = serializer.validated_data.get('username')
@@ -45,16 +46,16 @@ class UserViewSet(viewsets.ModelViewSet):
         user.set_password(password)
         user.save()
         if role:
-            reporter = Reporter.objects.create(user=user, role=role)
+            account = Account.objects.create(user=user, role=role)
         else:
-            reporter = Reporter.objects.create(user=user)
-        if request.user.is_anonymous():
+            account = Account.objects.create(user=user)
+        if request.user.is_anonymous:
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
-            return Response(ReporterSerializer(reporter).data)
-        reporter = Reporter.objects.get(user=self.request.user)
-        if request.user.is_staff or int(reporter.role) == 3:
+            return Response(AccountSerializer(account).data)
+        account = Account.objects.get(user=self.request.user)
+        if request.user.is_staff or account.role == MODERATOR:
             return Response(self.serializer_class(user).data)
         return Response(status=400)
 
@@ -68,31 +69,30 @@ class UserViewSet(viewsets.ModelViewSet):
         if user == self.request.user:
             user = authenticate(username=user.username, password=password)
             login(self.request, user)
-        reporter = Reporter.objects.get(user=user)
-        reporter.role = role
-        reporter.save()
+        account = Account.objects.get(user=user)
+        account.role = role
+        account.save()
 
     def perform_destroy(self, instance):
-        reporter = Reporter.objects.get(user=instance).delete()
+        account = Account.objects.get(user=instance).delete()
         super(UserViewSet, self).perform_destroy(instance)
 
 
-class ReporterViewSet(viewsets.ModelViewSet):
-    """
-    View set of Reporter API
+class AccountViewSet(viewsets.ModelViewSet):
+    """View set of Account API
     """
 
-    permission_classes = [ReporterUserPermissions,]
-    queryset = Reporter.objects.all()
-    serializer_class = ReporterSerializer
+    permission_classes = [AccountUserPermissions,]
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Reporter.objects.all()
-        reporter = Reporter.objects.get(user=self.request.user)
-        if int(reporter.role) == 3 or int(reporter.role) == 2:
-            return Reporter.objects.all()
-        return Reporter.objects.filter(user=self.request.user)
+            return Account.objects.all()
+        account = Account.objects.get(user=self.request.user)
+        if account.role == MODERATOR or account.role == TRAINER:
+            return Account.objects.all()
+        return Account.objects.filter(user=self.request.user)
 
     def perform_create(self, instance):
         user = instance.validated_data.get('user')
@@ -103,8 +103,7 @@ class ReporterViewSet(viewsets.ModelViewSet):
 
 
 class AuthView(APIView):
-    """
-    View of authentication API
+    """View of authentication API
     """
 
     serializer_class = UserSerializer
@@ -113,11 +112,11 @@ class AuthView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
-        if user:
+        if user is not None and user.is_active:
             login(request, user)
-            reporter = Reporter.objects.get_or_create(user=user, role=(3 if user.is_staff else 1))
-            reporter = Reporter.objects.get(user=user)
-            return Response(ReporterSerializer(reporter).data)
+            account = Account.objects.get_or_create(user=user, role=(MODERATOR if user.is_staff else CLIENT))
+            account = Account.objects.get(user=user)
+            return Response(AccountSerializer(account).data)
         return Response({'details': ["Oops! Our system does not recognize that username or password.",]}, status=400)
  
     def delete(self, request):

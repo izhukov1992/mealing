@@ -13,21 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.urls import path, include
 from django.contrib import admin
 from rest_framework import routers
-from reporter.views import UserViewSet, ReporterViewSet, AuthView
+
+from account.views import UserViewSet, AccountViewSet, AuthView
 from meal.views import MealViewSet
 from .views import MealingIndexView
 
+
 api_v1_router = routers.DefaultRouter()
 api_v1_router.register(r'user', UserViewSet)
-api_v1_router.register(r'reporter', ReporterViewSet)
+api_v1_router.register(r'account', AccountViewSet)
 api_v1_router.register(r'meal', MealViewSet)
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/v1/', include(api_v1_router.urls)),
-    url(r'^api/v1/auth/$', AuthView.as_view()),
-    url(r'^$', MealingIndexView.as_view()),
+    path('admin/', admin.site.urls),
+    path('api/v1/', include(api_v1_router.urls)),
+    path('api/v1/auth/', AuthView.as_view()),
+    path('', MealingIndexView.as_view()),
 ]

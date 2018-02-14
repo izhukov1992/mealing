@@ -1,13 +1,13 @@
 from django.db import models
-from reporter.models import Reporter
+
+from account.models import Account
 
 
 class Meal(models.Model):
-    """
-    Meal model
+    """Meal model
     """
 
-    reporter = models.ForeignKey(Reporter, blank=True, null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     description = models.CharField(max_length=255)

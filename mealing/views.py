@@ -3,8 +3,7 @@ from django.views.generic.base import TemplateView
 
 
 class MealingBaseView(TemplateView):
-    """
-    Base template view
+    """Base template view
     """
 
     context = dict()
@@ -14,8 +13,7 @@ class MealingBaseView(TemplateView):
 
 
 class MealingIndexView(MealingBaseView):
-    """
-    Index view
+    """Index view
     """
     
     template_name = 'index.html'
