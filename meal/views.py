@@ -5,6 +5,7 @@ from datetime import datetime
 
 from account.constants import TRAINER, MODERATOR
 from account.models import Account
+
 from .models import Meal
 from .serializers import MealSerializer
 from .permissions import MealUserPermissions

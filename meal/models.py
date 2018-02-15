@@ -1,13 +1,12 @@
 from django.db import models
-
-from account.models import Account
+from django.contrib.auth.models import User
 
 
 class Meal(models.Model):
     """Meal model
     """
 
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     description = models.CharField(max_length=255)

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from meal.serializers import MealSerializer
+
 from .models import Account
 
 
@@ -19,9 +21,12 @@ class UserSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     """Serializer of Account model
     """
-    
-    user = UserSerializer(read_only=True)
+
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.EmailField(source='user.email')
+    meals = MealSerializer(source='user.meal_set', many=True)
 
     class Meta:
         model = Account
-        fields = '__all__'
+        exclude = ('user', )
