@@ -160,7 +160,7 @@ class UserAPITestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post("/api/v1/user/", '{"username": "username2_correct", "password": "password2_correct", "password_confirm": "password2_correct"}', 'application/json')
         self.assertEqual(response.status_code, 200)
-        
+
         ## get
         response = self.client.get("/api/v1/user/")
         self.assertEqual(response.status_code, 200)
@@ -171,7 +171,7 @@ class UserAPITestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         response = self.client.get("/api/v1/user/3/")
         self.assertEqual(response.status_code, 200)
-        
+
         response = self.client.get("/api/v1/account/")
         self.assertEqual(response.status_code, 200)
         # permissions only to own account instance
@@ -181,13 +181,13 @@ class UserAPITestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         response = self.client.get("/api/v1/account/3/")
         self.assertEqual(response.status_code, 200)
-        
+
         # sign in as admin
         response = self.client.delete("/api/v1/auth/")
         self.assertEqual(response.status_code, 200)
         response = self.client.post("/api/v1/auth/", '{"username": "username_correct", "password": "password_correct"}', 'application/json')
         self.assertEqual(response.status_code, 200)
-        
+
         # try get again
         response = self.client.get("/api/v1/user/1/")
         self.assertEqual(response.status_code, 200)
@@ -197,25 +197,25 @@ class UserAPITestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get("/api/v1/account/2/")
         self.assertEqual(response.status_code, 200)
-        
+
         ## update
         user = User.objects.get(username="username2_correct")
         account = Account.objects.get(user=user)
         self.assertEqual(user.email, "")
         self.assertEqual(account.role, CLIENT)
         self.assertEqual(account.limit, 2500)
-        
-        response = self.client.put("/api/v1/user/3/", '{"username": "username2_correct", "password": "password2_correct", "email": "user@user.com", "role": "Trainer"}', 'application/json')
+
+        response = self.client.patch("/api/v1/user/3/", '{"email": "user@user.com", "role": "Trainer"}', 'application/json')
         self.assertEqual(response.status_code, 200)
-        response = self.client.put("/api/v1/account/3/", '{"limit": 1000}', 'application/json')
+        response = self.client.patch("/api/v1/account/3/", '{"limit": 1000}', 'application/json')
         self.assertEqual(response.status_code, 200)
-        
+
         user = User.objects.get(username="username2_correct")
         account = Account.objects.get(user=user)
         self.assertEqual(user.email, "user@user.com")
         self.assertEqual(account.role, TRAINER)
         self.assertEqual(account.limit, 1000)
-        
+
         ## delete
         response = self.client.delete("/api/v1/user/2/")
         self.assertEqual(response.status_code, 204)

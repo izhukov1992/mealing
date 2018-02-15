@@ -22,11 +22,11 @@ class AccountSerializer(serializers.ModelSerializer):
     """Serializer of Account model
     """
 
-    first_name = serializers.CharField(source='user.first_name')
-    last_name = serializers.CharField(source='user.last_name')
-    email = serializers.EmailField(source='user.email')
-    meals = MealSerializer(source='user.meal_set', many=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    meals = MealSerializer(source='user.meal_set', many=True, read_only=True)
 
     class Meta:
         model = Account
-        exclude = ('user', )
+        fields = '__all__'

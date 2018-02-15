@@ -9,4 +9,4 @@ class MealSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meal
-        exclude = ('user', )
+        fields = '__all__'

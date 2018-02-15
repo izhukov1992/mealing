@@ -5,7 +5,6 @@ from datetime import datetime
 
 from account.constants import TRAINER, MODERATOR
 from account.models import Account
-
 from .models import Meal
 from .serializers import MealSerializer
 from .permissions import MealUserPermissions
@@ -23,11 +22,11 @@ class MealViewSet(viewsets.ModelViewSet):
         queryset = Meal.objects.all()
         account = Account.objects.get(user=self.request.user)
         if self.request.user.is_staff or account.role == MODERATOR or account.role == TRAINER:
-            account_param = self.request.query_params.get('account')
-            if account_param:
-                queryset = queryset.filter(account=account_param)
+            user_param = self.request.query_params.get('user')
+            if user_param:
+                queryset = queryset.filter(user=user_param)
         else:
-            queryset = queryset.filter(account=account)
+            queryset = queryset.filter(user=self.request.user)
         only_today = self.request.query_params.get('only_today')
         if only_today:
             return queryset.filter(date=datetime.today())
@@ -56,12 +55,12 @@ class MealViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             account = Account.objects.get(user=request.user)
             if request.user.is_staff or account.role == MODERATOR or account.role == TRAINER:
-                account_param = serializer.validated_data.get('account')
-                if account_param:
-                    meal = serializer.save(account=account_param)
+                user_param = serializer.validated_data.get('user')
+                if user_param:
+                    meal = serializer.save(user=user_param)
                 else:
-                    meal = serializer.save(account=account)
+                    meal = serializer.save(user=request.user)
             else:
-                meal = serializer.save(account=account)
+                meal = serializer.save(user=request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
