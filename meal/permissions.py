@@ -8,7 +8,9 @@ class MealUserPermissions(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        if request.user.account.is_staff:
+        # If staff account, allow all meals
+        if request.user.is_authenticated and request.user.account.is_staff:
             return True
 
+        # Otherwise, allow only own meals
         return request.user == obj.account.user

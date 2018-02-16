@@ -12,7 +12,7 @@ class MealViewSet(viewsets.ModelViewSet):
     """View set of Meal API
     """
 
-    permission_classes = [permissions.IsAuthenticated, MealUserPermissions]
+    permission_classes = [permissions.IsAuthenticated,]
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
 

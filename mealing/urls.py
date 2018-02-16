@@ -16,20 +16,31 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib import admin
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 
-from account.views import UserViewSet, AccountViewSet, AuthView
+from account.views import UserViewSet, UserAuthView, AccountViewSet, AccountPartialViewSet, AccountFullViewSet
 from meal.views import MealViewSet
+
 from .views import MealingIndexView
 
 
-api_v1_router = routers.DefaultRouter()
-api_v1_router.register(r'user', UserViewSet)
-api_v1_router.register(r'account', AccountViewSet)
-api_v1_router.register(r'meal', MealViewSet)
+user_router = routers.DefaultRouter()
+user_router.register(r'', UserViewSet)
+
+account_router = routers.DefaultRouter()
+account_router.register(r'e', AccountViewSet)
+account_router.register(r'partial', AccountPartialViewSet)
+account_router.register(r'full', AccountFullViewSet)
+
+meal_router = routers.DefaultRouter()
+meal_router.register(r'', MealViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(api_v1_router.urls)),
-    path('api/v1/auth/', AuthView.as_view()),
+    path('api/v1/meal/', include(meal_router.urls)),
+    path('api/v1/account/', include(account_router.urls)),
+    path('api/v1/user/', include(user_router.urls)),
+    path('api/v1/token/', obtain_jwt_token),
+    path('api/v1/auth/', UserAuthView.as_view()),
     path('', MealingIndexView.as_view()),
 ]
