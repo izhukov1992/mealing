@@ -87,19 +87,18 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        if self.request.user.account.is_staff:
             return Account.objects.all()
-        account = Account.objects.get(user=self.request.user)
-        if account.role == MODERATOR or account.role == TRAINER:
-            return Account.objects.all()
-        return Account.objects.filter(user=self.request.user)
 
-    def perform_create(self, instance):
-        user = instance.validated_data.get('user')
-        if user:
-            instance.save()
+        return Account.objects.get_by_user(self.request.user)
+
+    def perform_create(self, serializer):
+        user = serializer.validated_data.get('user')
+
+        if self.request.user.account.is_staff and user:
+            meal = serializer.save(user=user)
         else:
-            instance.save(user=self.request.user)
+            meal = serializer.save(user=self.request.user)
 
 
 class AuthView(APIView):
@@ -115,7 +114,7 @@ class AuthView(APIView):
         if user is not None and user.is_active:
             login(request, user)
             account = Account.objects.get_or_create(user=user, role=(MODERATOR if user.is_staff else CLIENT))
-            account = Account.objects.get(user=user)
+            account = user.account
             return Response(AccountSerializer(account).data)
         return Response({'details': ["Oops! Our system does not recognize that username or password.",]}, status=400)
  

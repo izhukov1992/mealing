@@ -1,7 +1,6 @@
 from rest_framework import permissions
 
 from .constants import TRAINER, MODERATOR
-from .models import Account
 
 
 class UserPermissions(permissions.BasePermission):
@@ -16,9 +15,9 @@ class UserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-        account = Account.objects.get(user=request.user)
-        if request.user.is_staff or account.role == MODERATOR:
+        if request.user.account.is_staff:
             return True
+
         return request.user == obj
 
 
@@ -34,10 +33,9 @@ class AccountUserPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-        account = Account.objects.get(user=request.user)
-        if request.user.is_staff or account.role == MODERATOR:
+        if request.user.account.role == MODERATOR:
             return True
-        if account.role == TRAINER:
+        if request.user.account.role == TRAINER:
             if request.method == "GET":
                 return True
             return False

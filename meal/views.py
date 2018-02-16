@@ -3,8 +3,6 @@ from rest_framework.response import Response
 
 from datetime import datetime
 
-from account.constants import TRAINER, MODERATOR
-from account.models import Account
 from .models import Meal
 from .serializers import MealSerializer
 from .permissions import MealUserPermissions
@@ -19,48 +17,43 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
 
     def get_queryset(self):
-        queryset = Meal.objects.all()
-        account = Account.objects.get(user=self.request.user)
-        if self.request.user.is_staff or account.role == MODERATOR or account.role == TRAINER:
-            user_param = self.request.query_params.get('user')
-            if user_param:
-                queryset = queryset.filter(user=user_param)
-        else:
-            queryset = queryset.filter(user=self.request.user)
-        only_today = self.request.query_params.get('only_today')
-        if only_today:
-            return queryset.filter(date=datetime.today())
+        user = self.request.query_params.get('user')
+        in_date = self.request.query_params.get('in_date')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        if start_date:
-            queryset = queryset.filter(date__gte=start_date)
-        if end_date:
-            queryset = queryset.filter(date__lte=end_date)
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
-        if start_time:
+
+        meals = Meal.objects.all()
+
+        if self.request.user.account.is_staff and user:
+            meals = Meal.objects.get_by_user(user) 
+
+        if in_date:
+            return meals.get_by_date(in_date)
+
+        if start_date and start_time:
+            meals = meals.get_from_datetime(start_date, start_time)
+        else:
             if start_date:
-                queryset = queryset.exclude(date=start_date,
-                                            time__lt=start_time)
-            queryset = queryset.filter(time__gte=start_time)
-        if end_time:
+                meals = meals.get_from_date(start_date)
+            if start_time:
+                meals = meals.get_from_time(start_time)
+
+        if end_date and end_time:
+            meals = meals.get_due_datetime(end_date, end_time)
+        else:
             if end_date:
-                queryset = queryset.exclude(date=end_date,
-                                            time__gt=end_time)
-            queryset = queryset.filter(time__lte=end_time)
-        return queryset
+                meals = meals.get_due_date(end_date)
+            if end_time:
+                meals = meals.get_due_time(end_time)
+
+        return meals
  
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            account = Account.objects.get(user=request.user)
-            if request.user.is_staff or account.role == MODERATOR or account.role == TRAINER:
-                user_param = serializer.validated_data.get('user')
-                if user_param:
-                    meal = serializer.save(user=user_param)
-                else:
-                    meal = serializer.save(user=request.user)
-            else:
-                meal = serializer.save(user=request.user)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+    def perform_create(self, serializer):
+        user = serializer.validated_data.get('user')
+
+        if self.request.user.account.is_staff and user:
+            meal = serializer.save(user=user)
+        else:
+            meal = serializer.save(user=self.request.user)

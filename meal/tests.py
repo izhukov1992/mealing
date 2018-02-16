@@ -120,15 +120,15 @@ class MealAPITestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.post("/api/v1/meal/", '{"user": 2, "description": "meal1", "calories": 100, "date": "2015-7-21", "time": "14:30"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         response = self.client.post("/api/v1/meal/", '{"user": 2, "description": "meal2", "calories": 200, "date": "2015-7-20", "time": "12:30"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         response = self.client.post("/api/v1/meal/", '{"user": 2, "description": "meal3", "calories": 300, "date": "2015-7-21", "time": "10:30:01"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         # anyway will be added to user2
         response = self.client.post("/api/v1/meal/", '{"user": 1, "description": "meal4", "calories": 400, "date": "2015-7-21", "time": "11:30:01"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         # sign in as admin
         response = self.client.delete("/api/v1/auth/")
@@ -138,13 +138,13 @@ class MealAPITestCase(TestCase):
 
         # will be added to user1
         response = self.client.post("/api/v1/meal/", '{"user": 1, "description": "meal1", "calories": 100, "date": "2015-7-21", "time": "6:30"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         # will be added to user2
         response = self.client.post("/api/v1/meal/", '{"user": 2, "description": "meal5", "calories": 500, "date": "2015-7-21", "time": "16:30"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         # will be added to user1
         response = self.client.post("/api/v1/meal/", '{"user": 1, "description": "meal2", "calories": 200, "date": "2015-7-19", "time": "6:30"}', 'application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         ## get
         response = self.client.get("/api/v1/meal/")
