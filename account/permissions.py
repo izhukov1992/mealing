@@ -2,7 +2,10 @@ from rest_framework import permissions
 
 
 class UserPermissions(permissions.BasePermission):
-    """Permissions checking owner of user
+    """Permissions checking allowed methods and User instance.
+    Creating is allowed for anonymous users only.
+    Rest actions are allowed for authenticated users only.
+    Own instances allowed only.
     """
 
     def has_permission(self, request, view):
@@ -23,7 +26,10 @@ class UserPermissions(permissions.BasePermission):
 
 
 class AccountPermissions(permissions.BasePermission):
-    """Permissions checking owner of account
+    """Permissions checking allowed Acount instances.
+    All actions are allowed.
+    All instances are allowed for staff Accounts.
+    Own instances are allowed for rest authenticated users.
     """
 
     def has_object_permission(self, request, view, obj):

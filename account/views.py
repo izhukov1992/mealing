@@ -13,7 +13,9 @@ from .permissions import UserPermissions, AccountPermissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """View set of Account API
+    """View set of Users API.
+    Used for creating (signing up) and updating Users and Accounts.
+    Authentication token is returned after creating of User and related Account.
     """
 
     permission_classes = [UserPermissions, ]
@@ -33,7 +35,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserAuthView(APIView):
-    """View of authentication API
+    """View of authentication API.
+    Used for signing in native interface.
     """
 
     serializer_class = UserSignInSerializer
@@ -44,9 +47,12 @@ class UserAuthView(APIView):
 
         user = authenticate(username=username, password=password)
 
-        if user is not None and user.is_active:
-            login(request, user)
-            return Response(UserSerializer(user).data)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return Response(UserSerializer(user).data)
+
+            return Response({'details': ["Oops! User is banned.",]}, status=400)
 
         return Response({'details': ["Oops! Our system does not recognize that username or password.",]}, status=400)
  
@@ -56,7 +62,8 @@ class UserAuthView(APIView):
 
 
 class AccountViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    """View set of Account API
+    """View set of Account API.
+    Used for listing, viewing and updating main Account settings.
     """
 
     permission_classes = [IsAuthenticated, AccountPermissions]
@@ -71,7 +78,8 @@ class AccountViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
 
 class AccountPartialViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """View set of Account API
+    """View set of Account API.
+    Used for listing, viewing and updating main Account settings and related meals.
     """
 
     permission_classes = [IsAuthenticated, AccountPermissions]

@@ -7,7 +7,8 @@ from .models import Account
 
 
 class AccountSerializer(serializers.ModelSerializer):
-    """Serializer of Account model
+    """Serializer of Account model.
+    Used for listing, viewing, creating and updating Acounts.
     """
 
     class Meta:
@@ -17,7 +18,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer of User model for signing up and updating main user info
+    """Serializer of User model and related Account.
+    Used for creating (signing up) and updating Users and Accounts.
     """
 
     account = AccountSerializer()
@@ -54,7 +56,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserSignInSerializer(serializers.ModelSerializer):
-    """Serializer of User model for signing in native interface
+    """Serializer of User model.
+    Used for posting credentials (signing in) of User in native interface.
     """
 
     password = serializers.CharField(style={'input_type': 'password'})
@@ -65,7 +68,8 @@ class UserSignInSerializer(serializers.ModelSerializer):
 
 
 class AccountPartialSerializer(serializers.ModelSerializer):
-    """Serializer of Account model for partial listing
+    """Serializer of Account model.
+    Used for listing main Users and related Accounts info.
     """
 
     username = serializers.CharField(source='user.username', read_only=True)
@@ -79,7 +83,8 @@ class AccountPartialSerializer(serializers.ModelSerializer):
 
 
 class AccountFullSerializer(AccountPartialSerializer):
-    """Serializer of Account model for full listing
+    """Serializer of Account model.
+    Used for listing main Users, related Accounts and related Meals info.
     """
 
     meals = MealSerializer(source='user.meal_set', many=True, read_only=True)

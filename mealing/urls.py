@@ -28,7 +28,7 @@ user_router = routers.DefaultRouter()
 user_router.register(r'', UserViewSet)
 
 account_router = routers.DefaultRouter()
-account_router.register(r'e', AccountViewSet)
+account_router.register(r'', AccountViewSet)
 account_router.register(r'partial', AccountPartialViewSet)
 account_router.register(r'full', AccountFullViewSet)
 
