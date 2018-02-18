@@ -4,7 +4,10 @@ from account.constants import TRAINER, MODERATOR
 
 
 class MealUserPermissions(permissions.BasePermission):
-    """Permissions checking owner of Meal objects
+    """Permissions checking allowed Meal instances.
+    All actions are allowed.
+    All instances are allowed for staff Accounts.
+    Own instances are allowed for rest authenticated users.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -13,4 +16,4 @@ class MealUserPermissions(permissions.BasePermission):
             return True
 
         # Otherwise, allow only own meals
-        return request.user == obj.account.user
+        return request.user == obj.user

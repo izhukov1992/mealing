@@ -9,7 +9,8 @@ from .permissions import MealUserPermissions
 
 
 class MealViewSet(viewsets.ModelViewSet):
-    """View set of Meal API
+    """View set of Meal API.
+    Used for listing, viewing, updating and deleting Meals.
     """
 
     permission_classes = [permissions.IsAuthenticated,]
@@ -24,10 +25,13 @@ class MealViewSet(viewsets.ModelViewSet):
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
 
-        meals = Meal.objects.all()
+        meals = Meal.objects.get_by_user(self.request.user)
 
-        if self.request.user.account.is_staff and user:
-            meals = Meal.objects.get_by_user(user) 
+        if self.request.user.account.is_staff:
+            if user:
+                meals = Meal.objects.get_by_user(user)
+            else:
+                meals = Meal.objects.all()
 
         if in_date:
             return meals.get_by_date(in_date)
@@ -49,7 +53,7 @@ class MealViewSet(viewsets.ModelViewSet):
                 meals = meals.get_due_time(end_time)
 
         return meals
- 
+
     def perform_create(self, serializer):
         user = serializer.validated_data.get('user')
 
