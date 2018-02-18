@@ -8,7 +8,7 @@ from rest_framework_jwt.settings import api_settings
 
 from .constants import CLIENT, TRAINER, MODERATOR
 from .models import Account
-from .serializers import AccountSerializer, UserSerializer, UserSignInSerializer, AccountPartialSerializer, AccountFullSerializer
+from .serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer, UserSignInSerializer, AccountUserSerializer, AccountUserMealsSerializer
 from .permissions import UserPermissions, AccountPermissions
 
 
@@ -20,7 +20,15 @@ class UserViewSet(viewsets.ModelViewSet):
 
     permission_classes = [UserPermissions, ]
     queryset = User.objects.none()
-    serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return UserCreateSerializer
+
+        elif self.request.method == "PUT" or self.request.method == "PATCH":
+            return UserUpdateSerializer
+
+        return UserSerializer
 
     def get_queryset(self):
         return User.objects.filter(username=self.request.user.username)
@@ -61,34 +69,14 @@ class UserAuthView(APIView):
         return Response()
 
 
-class AccountViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    """View set of Account API.
-    Used for listing, viewing and updating main Account settings.
-    """
-
-    permission_classes = [IsAuthenticated, AccountPermissions]
-    queryset = Account.objects.none()
-    serializer_class = AccountSerializer
-
-    def get_queryset(self):
-        all = self.request.query_params.get('all')
-
-        accounts = Account.objects.get_by_user(self.request.user)
-
-        if self.request.user.account.is_staff and all:
-            accounts = Account.objects.all()
-
-        return accounts
-
-
-class AccountPartialViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class AccountUserViewSet(viewsets.ReadOnlyModelViewSet):
     """View set of Account API.
     Used for listing, viewing and updating main Account settings and related meals.
     """
 
     permission_classes = [IsAuthenticated, AccountPermissions]
     queryset = Account.objects.none()
-    serializer_class = AccountPartialSerializer
+    serializer_class = AccountUserSerializer
 
     def get_queryset(self):
         all = self.request.query_params.get('all')
@@ -101,8 +89,8 @@ class AccountPartialViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return accounts
 
 
-class AccountFullViewSet(AccountPartialViewSet):
+class AccountUserMealsViewSet(AccountUserViewSet):
     """View set of Account API
     """
 
-    serializer_class = AccountFullSerializer
+    serializer_class = AccountUserMealsSerializer

@@ -18,7 +18,7 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-from account.views import UserViewSet, UserAuthView, AccountViewSet, AccountPartialViewSet, AccountFullViewSet
+from account.views import UserViewSet, UserAuthView, AccountUserViewSet, AccountUserMealsViewSet
 from meal.views import MealViewSet
 
 from .views import MealingIndexView
@@ -28,9 +28,8 @@ user_router = routers.DefaultRouter()
 user_router.register(r'', UserViewSet)
 
 account_router = routers.DefaultRouter()
-account_router.register(r'', AccountViewSet)
-account_router.register(r'partial', AccountPartialViewSet)
-account_router.register(r'full', AccountFullViewSet)
+account_router.register(r'partial', AccountUserViewSet)
+account_router.register(r'full', AccountUserMealsViewSet)
 
 meal_router = routers.DefaultRouter()
 meal_router.register(r'', MealViewSet)
