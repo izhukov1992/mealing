@@ -18,6 +18,7 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
 
     def get_queryset(self):
+        all = self.request.query_params.get('all')
         user = self.request.query_params.get('user')
         in_date = self.request.query_params.get('in_date')
         start_date = self.request.query_params.get('start_date')
@@ -28,10 +29,10 @@ class MealViewSet(viewsets.ModelViewSet):
         meals = Meal.objects.get_by_user(self.request.user)
 
         if self.request.user.account.is_staff:
-            if user:
-                meals = Meal.objects.get_by_user(user)
-            else:
+            if all:
                 meals = Meal.objects.all()
+            elif user:
+                meals = Meal.objects.get_by_user(user)
 
         if in_date:
             return meals.get_by_date(in_date)

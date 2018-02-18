@@ -71,15 +71,12 @@ class AccountViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
     serializer_class = AccountSerializer
 
     def get_queryset(self):
-        user = self.request.query_params.get('user')
+        all = self.request.query_params.get('all')
 
         accounts = Account.objects.get_by_user(self.request.user)
 
-        if self.request.user.account.is_staff:
-            if user:
-                accounts = Account.objects.get_by_user(user)
-            else:
-                accounts = Account.objects.all()
+        if self.request.user.account.is_staff and all:
+            accounts = Account.objects.all()
 
         return accounts
 
@@ -94,10 +91,14 @@ class AccountPartialViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = AccountPartialSerializer
 
     def get_queryset(self):
-        if self.request.user.account.is_staff:
-            return Account.objects.all()
+        all = self.request.query_params.get('all')
 
-        return Account.objects.get_by_user(self.request.user)
+        accounts = Account.objects.get_by_user(self.request.user)
+
+        if self.request.user.account.is_staff and all:
+            accounts = Account.objects.all()
+
+        return accounts
 
 
 class AccountFullViewSet(AccountPartialViewSet):
