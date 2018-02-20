@@ -1,15 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from meal.serializers import MealSerializer
-
-from .models import Account
 from .constants import ACCOUNT_CREATE_TYPES
+from .models import Account
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class AccountReadOnlySerializer(serializers.ModelSerializer):
     """Serializer of Account model.
-    Used for listing, viewing, creating and updating Acounts.
+    Read only fields: id, role, limit.
     """
 
     class Meta:
@@ -20,7 +18,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class AccountCreateSerializer(serializers.ModelSerializer):
     """Serializer of Account model.
-    Used for listing, viewing, creating and updating Acounts.
+    Editable fields: role, limit.
+    Field role has only 2 choices: CLIENT, TRAINER.
     """
 
     role = serializers.ChoiceField(ACCOUNT_CREATE_TYPES)
@@ -30,22 +29,36 @@ class AccountCreateSerializer(serializers.ModelSerializer):
         fields = ('role', 'limit')
 
 
-class AccountUpdateSerializer(serializers.ModelSerializer):
+class AccountClientSerializer(serializers.ModelSerializer):
     """Serializer of Account model.
-    Used for listing, viewing, creating and updating Acounts.
+    Editable field: limit.
+    Read only fields: id, role.
     """
 
     class Meta:
         model = Account
-        fields = ('limit', )
+        fields = ('id', 'role', 'limit')
+        read_only_fields = ('id', 'role')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """Serializer of User model and related Account.
-    Used for creating (signing up) and updating Users and Accounts.
+class AccountStaffSerializer(serializers.ModelSerializer):
+    """Serializer of Account model.
+    Editable fields: role, limit.
+    Read only field: id.
     """
 
-    account = AccountSerializer()
+    class Meta:
+        model = Account
+        fields = ('id', 'role', 'limit')
+        read_only_fields = ('id', )
+
+
+class UserReadOnlySerializer(serializers.ModelSerializer):
+    """Serializer of User model and related Account model.
+    Read only fields: id, username, email, password, first_name, last_name, account, account_id, account_role, account_limit.
+    """
+
+    account = AccountReadOnlySerializer()
 
     class Meta:
         model = User
@@ -54,8 +67,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    """Serializer of User model and related Account.
-    Used for creating (signing up) and updating Users and Accounts.
+    """Serializer of User model and related Account model.
+    Editable fields: username, email, password, first_name, last_name, account_role, account_limit.
+    Field role has only 2 choices: CLIENT, TRAINER.
     """
 
     account = AccountCreateSerializer()
@@ -68,7 +82,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         account_data = validated_data.pop('account')
 
-        user = super(UserCreateSerializer, self).create(validated_data)
+        user = super(UserCreateMixin, self).create(validated_data)
         user.set_password(validated_data.get('password'))
         user.save()
 
@@ -77,22 +91,27 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
-    """Serializer of User model and related Account.
-    Used for creating (signing up) and updating Users and Accounts.
+class UserSignInSerializer(serializers.ModelSerializer):
+    """Serializer of User model.
+    Editable fields: username, password.
     """
 
-    account = AccountUpdateSerializer()
     password = serializers.CharField(style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'first_name', 'last_name', 'account')
+        fields = ('username', 'password')
+
+
+class UserUpdateBaseSerializer(serializers.ModelSerializer):
+    """Base serializer.
+    Implements update method of User model and related Account model.
+    """
 
     def update(self, instance, validated_data):
         account_data = validated_data.pop('account', None)
 
-        user = super(UserUpdateSerializer, self).update(instance, validated_data)
+        user = super(UserUpdateBaseSerializer, self).update(instance, validated_data)
 
         if validated_data.get('password'):
             user.set_password(validated_data.get('password'))
@@ -104,37 +123,39 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserSignInSerializer(serializers.ModelSerializer):
-    """Serializer of User model.
-    Used for posting credentials (signing in) of User in native interface.
+class UserClientSerializer(UserUpdateBaseSerializer):
+    """Serializer of User model and related Account model.
+    Editable fields: username, email, password, first_name, last_name, account_limit.
+    Read only field: id, account_id, account_role.
     """
 
+    account = AccountClientSerializer()
     password = serializers.CharField(style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'account')
+        read_only_fields = ('id', )
 
 
-class AccountUserSerializer(serializers.ModelSerializer):
-    """Serializer of Account model.
-    Used for listing main Users and related Accounts info.
+class UserClientStaffSerializer(UserClientSerializer):
+    """Serializer of User model and related Account model.
+    Editable fields: username, email, password, first_name, last_name, account_limit, account_role.
+    Read only field: id, account_id.
     """
 
-    username = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.EmailField(source='user.email', read_only=True)
-    first_name = serializers.CharField(source='user.first_name', read_only=True)
-    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    account = AccountStaffSerializer()
+
+
+class UserStaffSerializer(UserUpdateBaseSerializer):
+    """Serializer of User model and related Account model.
+    Editable fields: account_limit, account_role.
+    Read only field: id, username, email, password, first_name, last_name, account_id.
+    """
+
+    account = AccountStaffSerializer()
 
     class Meta:
-        model = Account
-        fields = '__all__'
-        read_only_fields = ('user', )
-
-
-class AccountUserMealsSerializer(AccountUserSerializer):
-    """Serializer of Account model.
-    Used for listing main Users, related Accounts and related Meals info.
-    """
-
-    meals = MealSerializer(source='user.meal_set', many=True, read_only=True)
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'account')
+        read_only_fields = ('id', 'username', 'email', 'first_name', 'last_name')

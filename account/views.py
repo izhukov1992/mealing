@@ -1,40 +1,30 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.settings import api_settings
 
-from .constants import CLIENT, TRAINER, MODERATOR
 from .models import Account
-from .serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer, UserSignInSerializer, AccountUserSerializer, AccountUserMealsSerializer
-from .permissions import UserPermissions, AccountPermissions
+from .serializers import UserReadOnlySerializer, UserCreateSerializer, UserSignInSerializer, UserClientSerializer, UserClientStaffSerializer, UserStaffSerializer
+from .permissions import UserOwnerPermissions, StaffPermissions, AnonymousPermissions
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """View set of Users API.
-    Used for creating (signing up) and updating Users and Accounts.
+class UserCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """View set of Users creating API.
+    Used for creating (signing up) Users and related Accounts.
     Authentication token is returned after creating of User and related Account.
+    Allowed only for anonymous users.
     """
 
-    permission_classes = [UserPermissions, ]
+    permission_classes = [AnonymousPermissions]
     queryset = User.objects.none()
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return UserCreateSerializer
-
-        elif self.request.method == "PUT" or self.request.method == "PATCH":
-            return UserUpdateSerializer
-
-        return UserSerializer
-
-    def get_queryset(self):
-        return User.objects.filter(username=self.request.user.username)
+    serializer_class = UserCreateSerializer
 
     def create(self, request):
-        super(UserViewSet, self).create(request)
+        super(UserCreateViewSet, self).create(request)
 
         payload = api_settings.JWT_PAYLOAD_HANDLER(self.request.user)
         token = api_settings.JWT_ENCODE_HANDLER(payload)
@@ -45,6 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class UserAuthView(APIView):
     """View of authentication API.
     Used for signing in native interface.
+    Allowed for everyone.
     """
 
     serializer_class = UserSignInSerializer
@@ -58,7 +49,7 @@ class UserAuthView(APIView):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return Response(UserSerializer(user).data)
+                return Response(UserReadOnlySerializer(user).data)
 
             return Response({'details': ["Oops! User is banned.",]}, status=400)
 
@@ -69,28 +60,37 @@ class UserAuthView(APIView):
         return Response()
 
 
-class AccountUserViewSet(viewsets.ReadOnlyModelViewSet):
-    """View set of Account API.
-    Used for listing, viewing and updating main Account settings and related meals.
+class UserClientViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """View set of Users API.
+    Used for listing, viewing, updating and destroying Users and related Accounts.
+    Allowed only for owners.
+    Users with staff type Account are able to change Account role, other users are unable.
     """
 
-    permission_classes = [IsAuthenticated, AccountPermissions]
-    queryset = Account.objects.none()
-    serializer_class = AccountUserSerializer
+    permission_classes = [IsAuthenticated, UserOwnerPermissions]
+    queryset = User.objects.none()
+
+    def get_serializer_class(self):
+        if self.request.user.account.is_staff:
+            return UserClientStaffSerializer
+
+        return UserClientSerializer
 
     def get_queryset(self):
-        all = self.request.query_params.get('all')
+        return User.objects.filter(username=self.request.user.username)
 
-        accounts = Account.objects.get_by_user(self.request.user)
-
-        if self.request.user.account.is_staff and all:
-            accounts = Account.objects.all()
-
-        return accounts
+    def get_object(self):
+        user = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, user)
+        return user
 
 
-class AccountUserMealsViewSet(AccountUserViewSet):
-    """View set of Account API
+class UserStaffViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
     """
 
-    serializer_class = AccountUserMealsSerializer
+    permission_classes = [IsAuthenticated, StaffPermissions]
+    queryset = User.objects.all()
+    serializer_class = UserStaffSerializer

@@ -18,18 +18,16 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-from account.views import UserViewSet, UserAuthView, AccountUserViewSet, AccountUserMealsViewSet
+from account.views import UserCreateViewSet, UserAuthView, UserClientViewSet, UserStaffViewSet
 from meal.views import MealViewSet
 
 from .views import MealingIndexView
 
 
 user_router = routers.DefaultRouter()
-user_router.register(r'', UserViewSet)
-
-account_router = routers.DefaultRouter()
-account_router.register(r'partial', AccountUserViewSet)
-account_router.register(r'full', AccountUserMealsViewSet)
+user_router.register(r'create', UserCreateViewSet)
+user_router.register(r'client', UserClientViewSet)
+user_router.register(r'staff', UserStaffViewSet)
 
 meal_router = routers.DefaultRouter()
 meal_router.register(r'', MealViewSet)
@@ -37,7 +35,6 @@ meal_router.register(r'', MealViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/meal/', include(meal_router.urls)),
-    path('api/v1/account/', include(account_router.urls)),
     path('api/v1/user/', include(user_router.urls)),
     path('api/v1/token/', obtain_jwt_token),
     path('api/v1/auth/', UserAuthView.as_view()),
