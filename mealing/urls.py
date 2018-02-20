@@ -19,7 +19,7 @@ from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
 from account.views import UserCreateViewSet, UserAuthView, UserClientViewSet, UserStaffViewSet
-from meal.views import MealViewSet
+from meal.views import MealClientViewSet, MealStaffViewSet
 
 from .views import MealingIndexView
 
@@ -30,7 +30,8 @@ user_router.register(r'client', UserClientViewSet)
 user_router.register(r'staff', UserStaffViewSet)
 
 meal_router = routers.DefaultRouter()
-meal_router.register(r'', MealViewSet)
+meal_router.register(r'client', MealClientViewSet)
+meal_router.register(r'staff', MealStaffViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
