@@ -1,5 +1,7 @@
 from rest_framework import permissions
 
+from .constants import CLIENT, TRAINER, MODERATOR
+
 
 class UserOwnerPermissions(permissions.BasePermission):
     """Object level permissions of User model.
@@ -33,6 +35,40 @@ class AnonymousPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         # Allow rest methods for authenticated user only
         if request.user.is_anonymous:
+            return True
+
+        return False
+   
+        
+
+
+
+
+class TrainerPermissions(permissions.BasePermission):
+    """Permissions checked users with staff type Account.
+    All actions are allowed.
+    """
+
+    def has_permission(self, request, view):
+        # Allow rest methods for authenticated user only
+        if request.user.account.role == TRAINER:
+            return True
+
+        return False
+
+
+
+
+
+
+class ClientPermissions(permissions.BasePermission):
+    """Permissions checked users with staff type Account.
+    All actions are allowed.
+    """
+
+    def has_permission(self, request, view):
+        # Allow rest methods for authenticated user only
+        if request.user.account.role == CLIENT:
             return True
 
         return False

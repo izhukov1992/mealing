@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from acount.constants import CLIENT, MODERATOR
+from account.constants import CLIENT, MODERATOR
 from account.models import Account
 
 

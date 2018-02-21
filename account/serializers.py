@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .constants import ACCOUNT_CREATE_TYPES
-from .models import Account
+from .constants import ACCOUNT_CREATE_TYPES, MODERATOR, TRAINER, CLIENT
+from .models import Account, Moderator, Trainer, Client, ClientToTrainer
 
 
 class AccountReadOnlySerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class AccountCreateSerializer(serializers.ModelSerializer):
         fields = ('role', 'limit')
 
 
-class AccountClientSerializer(serializers.ModelSerializer):
+class AccountPersonalSerializer(serializers.ModelSerializer):
     """Serializer of Account model.
     Editable field: limit.
     Read only fields: id, role.
@@ -82,7 +82,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         account_data = validated_data.pop('account')
 
-        user = super(UserCreateMixin, self).create(validated_data)
+        user = super(UserCreateSerializer, self).create(validated_data)
         user.set_password(validated_data.get('password'))
         user.save()
 
@@ -118,18 +118,32 @@ class UserUpdateBaseSerializer(serializers.ModelSerializer):
             user.save()
 
         if account_data is not None:
+            role = account_data.get('role')
+
             Account.objects.update_or_create(user=user, defaults=account_data)
+
+            if role is not None:
+                account = Account.objects.get(user=user)
+
+                if role == MODERATOR:
+                    Moderator.objects.update_or_create(account=account)
+
+                elif role == TRAINER:
+                    Trainer.objects.update_or_create(account=account)
+
+                elif role == CLIENT:
+                    Client.objects.update_or_create(account=account)
 
         return user
 
 
-class UserClientSerializer(UserUpdateBaseSerializer):
+class UserPersonalSerializer(UserUpdateBaseSerializer):
     """Serializer of User model and related Account model.
     Editable fields: username, email, password, first_name, last_name, account_limit.
     Read only field: id, account_id, account_role.
     """
 
-    account = AccountClientSerializer()
+    account = AccountPersonalSerializer()
     password = serializers.CharField(style={'input_type': 'password'})
 
     class Meta:
@@ -138,7 +152,7 @@ class UserClientSerializer(UserUpdateBaseSerializer):
         read_only_fields = ('id', )
 
 
-class UserClientStaffSerializer(UserClientSerializer):
+class UserPersonalStaffSerializer(UserPersonalSerializer):
     """Serializer of User model and related Account model.
     Editable fields: username, email, password, first_name, last_name, account_limit, account_role.
     Read only field: id, account_id.
@@ -159,3 +173,113 @@ class UserStaffSerializer(UserUpdateBaseSerializer):
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'account')
         read_only_fields = ('id', 'username', 'email', 'first_name', 'last_name')
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+class TrainerClientsReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = Trainer
+        fields = ('id', 'clients')
+        read_only_fields = ('id', 'clients')
+
+
+class TrainerReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = Trainer
+        fields = ('id', )
+        read_only_fields = ('id', )
+
+
+class AccountTrainerReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    trainer = TrainerReadOnlySerializer()
+
+    class Meta:
+        model = Account
+        fields = ('id', 'role', 'trainer')
+        read_only_fields = ('id', 'role', 'trainer')
+        
+        
+class UserTrainerReadOnlySerializer(UserUpdateBaseSerializer):
+    """Serializer of User model and related Account model.
+    Editable fields: username, email, password, first_name, last_name, account_limit.
+    Read only field: id, account_id, account_role.
+    """
+
+    account = AccountTrainerReadOnlySerializer()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'account')
+        read_only_fields = ('id', 'username', 'first_name', 'last_name', 'account')
+
+        
+        
+        
+        
+
+
+
+class ClientTrainersReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = Client
+        fields = ('id', 'trainers')
+        read_only_fields = ('id', 'trainers')
+
+
+class ClientReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = Client
+        fields = ('id', 'limit')
+        read_only_fields = ('id', 'limit')
+
+
+class AccountClientReadOnlySerializer(serializers.ModelSerializer):
+    """
+    """
+
+    client = ClientReadOnlySerializer()
+
+    class Meta:
+        model = Account
+        fields = ('id', 'role', 'client')
+        read_only_fields = ('id', 'role', 'client')
+        
+        
+class UserClientReadOnlySerializer(UserUpdateBaseSerializer):
+    """Serializer of User model and related Account model.
+    Editable fields: username, email, password, first_name, last_name, account_limit.
+    Read only field: id, account_id, account_role.
+    """
+
+    account = AccountClientReadOnlySerializer()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'account')
+        read_only_fields = ('id', 'username', 'first_name', 'last_name', 'account')

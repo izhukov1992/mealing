@@ -7,8 +7,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.settings import api_settings
 
+from .constants import CLIENT, TRAINER
 from .models import Account
-from .serializers import UserReadOnlySerializer, UserCreateSerializer, UserSignInSerializer, UserClientSerializer, UserClientStaffSerializer, UserStaffSerializer
+from .serializers import UserReadOnlySerializer, UserCreateSerializer, UserSignInSerializer, UserPersonalSerializer, UserPersonalStaffSerializer, UserStaffSerializer
 from .permissions import UserOwnerPermissions, StaffPermissions, AnonymousPermissions
 
 
@@ -60,7 +61,7 @@ class UserAuthView(APIView):
         return Response()
 
 
-class UserClientViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserPersonalViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """View set of Users API.
     Used for listing, viewing, updating and destroying Users and related Accounts.
     Allowed only for owners.
@@ -72,9 +73,9 @@ class UserClientViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins
 
     def get_serializer_class(self):
         if self.request.user.account.is_staff:
-            return UserClientStaffSerializer
+            return UserPersonalStaffSerializer
 
-        return UserClientSerializer
+        return UserPersonalSerializer
 
     def get_queryset(self):
         return User.objects.filter(username=self.request.user.username)
@@ -94,3 +95,101 @@ class UserStaffViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.
     permission_classes = [IsAuthenticated, StaffPermissions]
     queryset = User.objects.all()
     serializer_class = UserStaffSerializer
+
+    
+    
+    
+    
+    
+    
+    
+from .serializers import UserTrainerReadOnlySerializer, TrainerClientsReadOnlySerializer, UserClientReadOnlySerializer, ClientTrainersReadOnlySerializer
+from .models import Trainer, Client, ClientToTrainer
+from .permissions import TrainerPermissions, ClientPermissions
+
+
+class TrainerClientsViewSet(viewsets.ReadOnlyModelViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
+    """
+
+    permission_classes = [IsAuthenticated]
+    queryset = Trainer.objects.all()
+    serializer_class = TrainerClientsReadOnlySerializer
+
+
+class UserTrainerViewSet(viewsets.ReadOnlyModelViewSet):
+
+    permission_classes = [IsAuthenticated, UserOwnerPermissions, TrainerPermissions]
+    queryset = User.objects.none()
+    serializer_class = UserTrainerReadOnlySerializer
+
+    def get_queryset(self):
+        return User.objects.filter(username=self.request.user.username)
+
+    def get_object(self):
+        user = self.request.user
+        self.check_object_permissions(self.request, user)
+        return user
+
+
+class UserTrainersViewSet(viewsets.ReadOnlyModelViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
+    """
+
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.none()
+    serializer_class = UserTrainerReadOnlySerializer
+
+    def get_queryset(self):
+        return User.objects.filter(account__role=TRAINER)
+
+    
+    
+
+
+class ClientTrainersViewSet(viewsets.ReadOnlyModelViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
+    """
+
+    permission_classes = [IsAuthenticated]
+    queryset = Client.objects.all()
+    serializer_class = ClientTrainersReadOnlySerializer
+
+
+class UserClientViewSet(viewsets.ReadOnlyModelViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
+    """
+
+    permission_classes = [IsAuthenticated, UserOwnerPermissions, ClientPermissions]
+    queryset = User.objects.none()
+    serializer_class = UserClientReadOnlySerializer
+
+    def get_queryset(self):
+        return User.objects.filter(username=self.request.user.username)
+
+    def get_object(self):
+        user = self.request.user
+        self.check_object_permissions(self.request, user)
+        return user
+
+
+class UserClientsViewSet(viewsets.ReadOnlyModelViewSet):
+    """View set of Account API.
+    Used for listing and viewing Users and related Accounts and updating Account settings.
+    Allowed only for users with staff type Account.
+    """
+
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = UserClientReadOnlySerializer
+
+    def get_queryset(self):
+        return User.objects.filter(account__role=CLIENT)
