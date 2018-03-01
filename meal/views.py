@@ -5,59 +5,24 @@ from rest_framework.permissions import IsAuthenticated
 
 from datetime import datetime
 
-from account.permissions import StaffPermissions
+from account.permissions import ModeratorPermissions, ClientPermissions
 
 from .models import Meal
-from .serializers import MealClientSerializer, MealStaffSerializer
-from .permissions import MealStaffOrOwnerPermissions, MealOwnerPermissions
+from .serializers import MealClientSerializer, MealModeratorSerializer
+from .permissions import MealOwnerPermissions
 
 
-class MealClientViewSet(viewsets.ModelViewSet):
-    """View set of Meal API.
-    Used for creating, listing, viewing, updating and deleting Meals.
-    Allowed only for owners.
-    Changing users is not allowed.
+class MealBaseViewSet(viewsets.ModelViewSet):
+    """Base calss of Meal API.
+    Implements queryset filter method.
     """
 
-    permission_classes = [IsAuthenticated, MealOwnerPermissions]
-    queryset = Meal.objects.none()
-    serializer_class = MealClientSerializer
-
-    def get_queryset(self):
-        return Meal.objects.get_by_user(self.request.user)
-
-    def get_object(self):
-        meal = get_object_or_404(Meal, pk=self.kwargs.get('pk'))
-        self.check_object_permissions(self.request, meal)
-        return meal
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class MealStaffViewSet(viewsets.ModelViewSet):
-    """View set of Meal API.
-    Used for creating, listing, viewing, updating and deleting Meals.
-    Allowed only for users with staff type Account.
-    Changing users is allowed.
-    """
-
-    permission_classes = [IsAuthenticated, StaffPermissions]
-    queryset = Meal.objects.all()
-    serializer_class = MealStaffSerializer
-
-    def get_queryset(self):
-        user = self.request.query_params.get('user')
+    def filter_meals(self, meals):
         in_date = self.request.query_params.get('in_date')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
-
-        meals = Meal.objects.all()
-
-        if user:
-            meals = Meal.objects.get_by_user(user)
 
         if in_date:
             return meals.get_by_date(in_date)
@@ -79,3 +44,49 @@ class MealStaffViewSet(viewsets.ModelViewSet):
                 meals = meals.get_due_time(end_time)
 
         return meals
+
+
+class MealClientViewSet(MealBaseViewSet):
+    """View set of Meal API.
+    Used for creating, listing, viewing, updating and deleting Meals.
+    Allowed only for owners.
+    Choosing client is not allowed.
+    """
+
+    permission_classes = [IsAuthenticated, ClientPermissions, MealOwnerPermissions]
+    queryset = Meal.objects.none()
+    serializer_class = MealClientSerializer
+
+    def get_queryset(self):
+        meals = Meal.objects.get_by_user(self.request.user)
+        return self.filter_meals(meals)
+
+    def get_object(self):
+        meal = get_object_or_404(Meal, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, meal)
+        return meal
+
+    def perform_create(self, serializer):
+        serializer.save(client=self.request.user.account.client)
+
+
+class MealModeratorViewSet(MealBaseViewSet):
+    """View set of Meal API.
+    Used for creating, listing, viewing, updating and deleting Meals.
+    Allowed only for users with moderator type Account.
+    Choosing clients is allowed.
+    """
+
+    permission_classes = [IsAuthenticated, ModeratorPermissions]
+    queryset = Meal.objects.all()
+    serializer_class = MealModeratorSerializer
+
+    def get_queryset(self):
+        meals = Meal.objects.all()
+
+        user = self.request.query_params.get('user')
+
+        if user:
+            meals = Meal.objects.get_by_user(user)
+
+        return self.filter_meals(meals)

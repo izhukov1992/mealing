@@ -18,22 +18,16 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-from account.views import UserCreateViewSet, UserAuthView, UserPersonalViewSet, UserStaffViewSet
-from meal.views import MealClientViewSet, MealStaffViewSet
+from account.views import UserCreateViewSet, UserCreateModeratorViewSet, UserAuthView, UserViewSet, UserTrainersViewSet, UserTrainerViewSet, TrainerClientsViewSet, UserClientsViewSet, UserClientViewSet, ClientTrainersViewSet
+from meal.views import MealClientViewSet, MealModeratorViewSet
 
 from .views import MealingIndexView
 
 
-
-
-
-from account.views import UserTrainersViewSet, UserTrainerViewSet, TrainerClientsViewSet, UserClientsViewSet, UserClientViewSet, ClientTrainersViewSet
-
-
 user_router = routers.DefaultRouter()
 user_router.register(r'create', UserCreateViewSet)
-user_router.register(r'personal', UserPersonalViewSet)
-user_router.register(r'staff', UserStaffViewSet)
+user_router.register(r'createmoderator', UserCreateModeratorViewSet)
+user_router.register(r'personal', UserViewSet)
 
 user_router.register(r'trainers', UserTrainersViewSet)
 user_router.register(r'trainer', UserTrainerViewSet)
@@ -44,7 +38,7 @@ user_router.register(r'clienttrainers', ClientTrainersViewSet)
 
 meal_router = routers.DefaultRouter()
 meal_router.register(r'client', MealClientViewSet)
-meal_router.register(r'staff', MealStaffViewSet)
+meal_router.register(r'moderator', MealModeratorViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

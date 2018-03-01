@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from .constants import ACCOUNT_TYPES, CLIENT, TRAINER, MODERATOR
+from .constants import ACCOUNT_TYPES, MODERATOR, TRAINER, CLIENT
 
 
 class AccountManager(models.Manager):
@@ -17,20 +17,21 @@ class Account(models.Model):
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    limit = models.IntegerField(default=2500)
     role = models.CharField(max_length=255, choices=ACCOUNT_TYPES, default=CLIENT)
+    available = models.BooleanField(default=True)
     objects = AccountManager()
 
     @property
-    def is_staff(self):
-        return self.role == MODERATOR or self.role == TRAINER
+    def is_moderator(self):
+        return self.role == MODERATOR
 
+    @property
+    def is_trainer(self):
+        return self.role == TRAINER
 
-
-        
-        
-        
-        
+    @property
+    def is_client(self):
+        return self.role == CLIENT
 
 
 class Moderator(models.Model):
@@ -54,11 +55,3 @@ class Client(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     limit = models.IntegerField(default=2500)
     trainers = models.ManyToManyField(Trainer, related_name='clients')
-
-
-class ClientToTrainer(models.Model):
-    """ClientToTrainer model
-    """
-
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE)

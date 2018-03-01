@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from account.models import Client
 
 
 class MealQuerySet(models.QuerySet):
@@ -7,7 +8,7 @@ class MealQuerySet(models.QuerySet):
     """
 
     def get_by_user(self, user):
-        return self.filter(user=user)
+        return self.filter(client__account__user=user)
 
     def get_by_date(self, date):
         return self.filter(date=date)
@@ -35,7 +36,7 @@ class Meal(models.Model):
     """Meal model
     """
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     description = models.CharField(max_length=255)

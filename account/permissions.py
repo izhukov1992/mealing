@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from .constants import CLIENT, TRAINER, MODERATOR
-
 
 class UserOwnerPermissions(permissions.BasePermission):
     """Object level permissions of User model.
@@ -12,19 +10,6 @@ class UserOwnerPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Otherwise, allow only own account
         return request.user == obj
-   
-        
-class StaffPermissions(permissions.BasePermission):
-    """Permissions checked users with staff type Account.
-    All actions are allowed.
-    """
-
-    def has_permission(self, request, view):
-        # Allow rest methods for authenticated user only
-        if request.user.account.is_staff:
-            return True
-
-        return False
    
         
 class AnonymousPermissions(permissions.BasePermission):
@@ -38,37 +23,42 @@ class AnonymousPermissions(permissions.BasePermission):
             return True
 
         return False
-   
-        
 
 
-
-
-class TrainerPermissions(permissions.BasePermission):
-    """Permissions checked users with staff type Account.
+class ModeratorPermissions(permissions.BasePermission):
+    """Permissions checked users with Moderator type Account.
     All actions are allowed.
     """
 
     def has_permission(self, request, view):
         # Allow rest methods for authenticated user only
-        if request.user.account.role == TRAINER:
+        if request.user.account.is_moderator:
             return True
 
         return False
 
 
-
-
-
-
-class ClientPermissions(permissions.BasePermission):
-    """Permissions checked users with staff type Account.
+class TrainerPermissions(permissions.BasePermission):
+    """Permissions checked users with Trainer type Account.
     All actions are allowed.
     """
 
     def has_permission(self, request, view):
         # Allow rest methods for authenticated user only
-        if request.user.account.role == CLIENT:
+        if request.user.account.is_trainer:
+            return True
+
+        return False
+
+
+class ClientPermissions(permissions.BasePermission):
+    """Permissions checked users with Client type Account.
+    All actions are allowed.
+    """
+
+    def has_permission(self, request, view):
+        # Allow rest methods for authenticated user only
+        if request.user.account.is_client:
             return True
 
         return False

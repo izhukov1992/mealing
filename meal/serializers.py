@@ -6,18 +6,18 @@ from .models import Meal
 class MealClientSerializer(serializers.ModelSerializer):
     """Model serializer of Meal model.
     Editable fields: date, time, description, calories.
-    Read only fields: id, user.
+    Read only fields: id, client.
     """
 
     class Meta:
         model = Meal
         fields = '__all__'
-        read_only_fields = ('id', 'user')
+        read_only_fields = ('id', 'client')
 
 
-class MealStaffSerializer(serializers.ModelSerializer):
+class MealModeratorSerializer(serializers.ModelSerializer):
     """Model serializer of Meal model.
-    Editable fields: date, time, description, calories, user.
+    Editable fields: date, time, description, calories, client.
     Read only field: id.
     """
 
