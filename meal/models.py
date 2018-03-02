@@ -10,6 +10,9 @@ class MealQuerySet(models.QuerySet):
     def get_by_user(self, user):
         return self.filter(client__account__user=user)
 
+    def get_by_trainer(self, user):
+        return self.filter(client__in=user.account.trainer.clients.all())
+
     def get_by_date(self, date):
         return self.filter(date=date)
 

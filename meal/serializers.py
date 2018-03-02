@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import Meal
 
 
-class MealClientSerializer(serializers.ModelSerializer):
+class MealSerializer(serializers.ModelSerializer):
     """Model serializer of Meal model.
     Editable fields: date, time, description, calories.
     Read only fields: id, client.

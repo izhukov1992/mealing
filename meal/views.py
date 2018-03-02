@@ -5,11 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 
 from datetime import datetime
 
-from account.permissions import ModeratorPermissions, ClientPermissions
+from account.permissions import ModeratorPermissions, TrainerPermissions, ClientPermissions
 
 from .models import Meal
-from .serializers import MealClientSerializer, MealModeratorSerializer
-from .permissions import MealOwnerPermissions
+from .serializers import MealSerializer, MealModeratorSerializer
+from .permissions import MealOwnerPermissions, MealTrainerClientsPermissions
 
 
 class MealBaseViewSet(viewsets.ModelViewSet):
@@ -18,11 +18,15 @@ class MealBaseViewSet(viewsets.ModelViewSet):
     """
 
     def filter_meals(self, meals):
+        user = self.request.query_params.get('user')
         in_date = self.request.query_params.get('in_date')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
+
+        if user:
+            meals = meals.get_by_user(user)
 
         if in_date:
             return meals.get_by_date(in_date)
@@ -55,7 +59,7 @@ class MealClientViewSet(MealBaseViewSet):
 
     permission_classes = [IsAuthenticated, ClientPermissions, MealOwnerPermissions]
     queryset = Meal.objects.none()
-    serializer_class = MealClientSerializer
+    serializer_class = MealSerializer
 
     def get_queryset(self):
         meals = Meal.objects.get_by_user(self.request.user)
@@ -68,6 +72,27 @@ class MealClientViewSet(MealBaseViewSet):
 
     def perform_create(self, serializer):
         serializer.save(client=self.request.user.account.client)
+
+
+class MealTrainerViewSet(MealBaseViewSet):
+    """View set of Meal API.
+    Used for creating, listing, viewing, updating and deleting Meals.
+    Allowed only for users with moderator type Account.
+    Choosing clients is allowed.
+    """
+
+    permission_classes = [IsAuthenticated, TrainerPermissions, MealTrainerClientsPermissions]
+    queryset = Meal.objects.none()
+    serializer_class = MealSerializer
+
+    def get_queryset(self):
+        meals = Meal.objects.get_by_trainer(self.request.user)
+        return self.filter_meals(meals)
+
+    def get_object(self):
+        meal = get_object_or_404(Meal, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, meal)
+        return meal
 
 
 class MealModeratorViewSet(MealBaseViewSet):
@@ -83,10 +108,4 @@ class MealModeratorViewSet(MealBaseViewSet):
 
     def get_queryset(self):
         meals = Meal.objects.all()
-
-        user = self.request.query_params.get('user')
-
-        if user:
-            meals = Meal.objects.get_by_user(user)
-
         return self.filter_meals(meals)
