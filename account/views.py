@@ -7,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.settings import api_settings
 
-from .constants import TRAINER, CLIENT
-from .models import Account, Moderator, Trainer, Client
-from .serializers import UserReadOnlySerializer, UserCreateSerializer, UserCreateModeratorSerializer, UserSignInSerializer, UserSerializer, UserTrainerReadOnlySerializer, TrainerClientsReadOnlySerializer, UserClientReadOnlySerializer, ClientTrainersReadOnlySerializer
-from .permissions import UserOwnerPermissions, AnonymousPermissions, ModeratorPermissions, TrainerPermissions, ClientPermissions
+from .constants import TRAINER, CLIENT, OPEN
+from .models import Account, Moderator, Trainer, Client, InviteTrainer, InviteClient
+from .serializers import UserReadOnlySerializer, UserCreateSerializer, UserCreateModeratorSerializer, UserSignInSerializer, UserSerializer, UserTrainerReadOnlySerializer, TrainerClientsReadOnlySerializer, UserClientReadOnlySerializer, ClientTrainersReadOnlySerializer, InviteTrainerCreateSerializer, InviteTrainerSerializer, InviteTrainerInitiatorSerializer, InviteClientCreateSerializer, InviteClientSerializer, InviteClientInitiatorSerializer
+from .permissions import UserOwnerPermissions, AnonymousPermissions, ModeratorPermissions, TrainerPermissions, ClientPermissions, InviteOwnPermissions, InviteOpenPermissions
 
 
 class UserCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -178,3 +178,105 @@ class UserClientsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return User.objects.filter(account__role=CLIENT)
+
+
+class InviteClientCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, TrainerPermissions]
+    queryset = InviteClient.objects.none()
+    serializer_class = InviteClientCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(trainer=self.request.user.account.trainer)
+
+
+class InviteClientReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, InviteOwnPermissions]
+    queryset = InviteClient.objects.none()
+    serializer_class = InviteClientSerializer
+
+    def get_queryset(self):
+        return InviteClient.objects.get_by_user(self.request.user)
+
+    def get_object(self):
+        invite = get_object_or_404(InviteClient, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, invite)
+        return invite
+
+
+class InviteClientOpenViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, InviteOwnPermissions, InviteOpenPermissions]
+    queryset = InviteClient.objects.none()
+
+    def get_serializer_class(self):
+        if self.request.user.account.is_client:
+            return InviteClientSerializer
+        elif self.request.user.account.is_trainer:
+            return InviteClientInitiatorSerializer
+
+    def get_queryset(self):
+        return InviteClient.objects.get_by_user(self.request.user).get_open()
+
+    def get_object(self):
+        invite = get_object_or_404(InviteClient, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, invite)
+        return invite
+
+
+class InviteTrainerCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, ClientPermissions]
+    queryset = InviteTrainer.objects.none()
+    serializer_class = InviteTrainerCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(client=self.request.user.account.client)
+
+
+class InviteTrainerReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, InviteOwnPermissions]
+    queryset = InviteTrainer.objects.none()
+    serializer_class = InviteTrainerSerializer
+
+    def get_queryset(self):
+        return InviteTrainer.objects.get_by_user(self.request.user)
+
+    def get_object(self):
+        invite = get_object_or_404(InviteTrainer, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, invite)
+        return invite
+
+
+class InviteTrainerOpenViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    """
+
+    permission_classes = [IsAuthenticated, InviteOwnPermissions, InviteOpenPermissions]
+    queryset = InviteTrainer.objects.none()
+
+    def get_serializer_class(self):
+        if self.request.user.account.is_trainer:
+            return InviteTrainerSerializer
+        elif self.request.user.account.is_client:
+            return InviteTrainerInitiatorSerializer
+
+    def get_queryset(self):
+        return InviteTrainer.objects.get_by_user(self.request.user).get_open()
+
+    def get_object(self):
+        invite = get_object_or_404(InviteTrainer, pk=self.kwargs.get('pk'))
+        self.check_object_permissions(self.request, invite)
+        return invite

@@ -62,3 +62,23 @@ class ClientPermissions(permissions.BasePermission):
             return True
 
         return False
+
+
+class InviteOwnPermissions(permissions.BasePermission):
+    """
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Otherwise, allow only own account
+        is_client_owner = request.user.account.is_client and request.user.account.client == obj.client
+        is_trainer_owner = request.user.account.is_trainer and request.user.account.trainer == obj.trainer
+        return is_client_owner or is_trainer_owner
+
+
+class InviteOpenPermissions(permissions.BasePermission):
+    """
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Otherwise, allow only own account
+        return obj.is_open

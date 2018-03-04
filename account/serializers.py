@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .constants import ACCOUNT_CREATE_MODERATOR_TYPES
-from .models import Account, Moderator, Trainer, Client
+from .constants import ACCOUNT_CREATE_MODERATOR_TYPES, INVITE_STATUS_TYPES, REJECTED
+from .models import Account, Moderator, Trainer, Client, InviteTrainer, InviteClient
 
 
 class AccountReadOnlySerializer(serializers.ModelSerializer):
@@ -245,3 +245,79 @@ class UserClientReadOnlySerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'account')
         read_only_fields = ('id', 'username', 'first_name', 'last_name', 'account')
+
+
+class InviteTrainerField(serializers.PrimaryKeyRelatedField):
+
+    def get_queryset(self):
+        request = self.context.get('request')
+        client = request.user.account.client
+        invited_by_client = InviteTrainer.objects.get_open().filter(client=client).values('trainer')
+        invited_client = InviteClient.objects.get_open().filter(client=client).values('trainer')
+        return Trainer.objects.exclude(id__in=invited_by_client).exclude(id__in=invited_client).exclude(id__in=client.trainers.all())
+
+
+class InviteTrainerCreateSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    trainer = InviteTrainerField()
+
+    class Meta:
+        model = InviteTrainer
+        fields = ('trainer', )
+
+
+class InviteTrainerSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = InviteTrainer
+        fields = '__all__'
+        read_only_fields = ('id', 'client', 'trainer')
+
+
+class InviteTrainerInitiatorSerializer(InviteTrainerSerializer):
+    """
+    """
+
+    status = serializers.ChoiceField(choices=(REJECTED, ))
+
+
+class InviteClientField(serializers.PrimaryKeyRelatedField):
+
+    def get_queryset(self):
+        request = self.context.get('request')
+        trainer = request.user.account.trainer
+        invited_by_trainer = InviteClient.objects.get_open().filter(trainer=trainer).values('client')
+        invited_trainer = InviteTrainer.objects.get_open().filter(trainer=trainer).values('client')
+        return Client.objects.exclude(id__in=invited_by_trainer).exclude(id__in=invited_trainer).exclude(id__in=trainer.clients.all())
+
+
+class InviteClientCreateSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    client = InviteClientField()
+
+    class Meta:
+        model = InviteClient
+        fields = ('client', )
+
+
+class InviteClientSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = InviteClient    
+        fields = '__all__'
+        read_only_fields = ('id', 'trainer', 'client')
+
+
+class InviteClientInitiatorSerializer(InviteClientSerializer):
+    """
+    """
+
+    status = serializers.ChoiceField(choices=(REJECTED, ))

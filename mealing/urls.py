@@ -18,7 +18,7 @@ from django.contrib import admin
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token
 
-from account.views import UserCreateViewSet, UserCreateModeratorViewSet, UserAuthView, UserViewSet, UserTrainersViewSet, UserTrainerViewSet, TrainerClientsViewSet, UserClientsViewSet, UserClientViewSet, ClientTrainersViewSet
+from account.views import UserCreateViewSet, UserCreateModeratorViewSet, UserAuthView, UserViewSet, UserTrainersViewSet, UserTrainerViewSet, TrainerClientsViewSet, UserClientsViewSet, UserClientViewSet, ClientTrainersViewSet, InviteClientCreateViewSet, InviteClientReadOnlyViewSet, InviteClientOpenViewSet, InviteTrainerCreateViewSet, InviteTrainerReadOnlyViewSet, InviteTrainerOpenViewSet
 from meal.views import MealClientViewSet, MealTrainerViewSet, MealModeratorViewSet
 
 from .views import MealingIndexView
@@ -28,13 +28,19 @@ user_router = routers.DefaultRouter()
 user_router.register(r'create', UserCreateViewSet)
 user_router.register(r'createmoderator', UserCreateModeratorViewSet)
 user_router.register(r'personal', UserViewSet)
-
 user_router.register(r'trainers', UserTrainersViewSet)
 user_router.register(r'trainer', UserTrainerViewSet)
 user_router.register(r'trainerclients', TrainerClientsViewSet)
 user_router.register(r'clients', UserClientsViewSet)
 user_router.register(r'client', UserClientViewSet)
 user_router.register(r'clienttrainers', ClientTrainersViewSet)
+
+user_router.register(r'inviteclient', InviteClientCreateViewSet)
+user_router.register(r'inviteclientlist', InviteClientReadOnlyViewSet)
+user_router.register(r'inviteclientresponse', InviteClientOpenViewSet)
+user_router.register(r'invitetrainer', InviteTrainerCreateViewSet)
+user_router.register(r'invitetrainerlist', InviteTrainerReadOnlyViewSet)
+user_router.register(r'invitetrainerresponse', InviteTrainerOpenViewSet)
 
 meal_router = routers.DefaultRouter()
 meal_router.register(r'client', MealClientViewSet)
