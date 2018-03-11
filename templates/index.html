@@ -1,68 +1,27 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
-    {% load static %}
+
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!--<link rel="icon" href="../../favicon.ico">-->
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Mealing</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'bower_components/bootswatch/lumen/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'bower_components/datatables/media/css/jquery.dataTables.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'bower_components/angular-datatables/dist/css/angular-datatables.min.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/react-md@1.2.11/dist/react-md.light_blue-blue.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Roboto:400,500,700">
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <!--<script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'app/css/style.css' %}" rel="stylesheet">
   </head>
 
-  <body role="document" ng-app="mealing">
-    
-    <div class="ui-view"></div>
+  <body id="page-top">
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.min.js' %}"></script>
-    <!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>-->
-    <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
-    <!-- AngularJS -->
-    <script src="{% static 'bower_components/angular/angular.min.js' %}"></script>
-    <script src="{% static 'bower_components/angular-resource/angular-resource.min.js' %}"></script>
-    <script src="{% static 'bower_components/angular-cookies/angular-cookies.min.js' %}"></script>
-    <script src="{% static 'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js' %}"></script>
-    <script src="{% static 'bower_components/angular-datatables/dist/angular-datatables.min.js' %}"></script>
-    <script src="{% static 'bower_components/angular-ui-router/release/angular-ui-router.min.js' %}"></script>
-    <script src="{% static 'bower_components/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js' %}"></script>
-    <script src="{% static 'app/js/app.js' %}"></script>
-    <script src="{% static 'app/js/services/user.service.js' %}"></script>
-    <script src="{% static 'app/js/services/auth.service.js' %}"></script>
-    <script src="{% static 'app/js/services/reporter.service.js' %}"></script>
-    <script src="{% static 'app/js/services/meal.service.js' %}"></script>
-    <script src="{% static 'app/js/controllers/dashboard.controller.js' %}"></script>
-    <script src="{% static 'app/js/controllers/manager.controller.js' %}"></script>
-    <script src="{% static 'app/js/controllers/auth.controller.js' %}"></script>
-    <script src="{% static 'app/js/controllers/signout.controller.js' %}"></script>
+    <div id="content"></div>
+
+    <script src="{% static 'assets/js/bundle.js' %}"></script>
+
   </body>
+
 </html>
