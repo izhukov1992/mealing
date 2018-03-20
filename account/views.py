@@ -62,7 +62,11 @@ class UserAuthView(APIView):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return Response(UserReadOnlySerializer(user).data)
+
+                payload = api_settings.JWT_PAYLOAD_HANDLER(self.request.user)
+                token = api_settings.JWT_ENCODE_HANDLER(payload)
+
+                return Response({'token': token}, status=200)
 
             return Response({'details': ["Oops! User is banned.",]}, status=400)
 
