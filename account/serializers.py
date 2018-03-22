@@ -67,8 +67,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
     Field role has only 2 choices: CLIENT, TRAINER.
     """
 
-    account = AccountCreateSerializer()
+    email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
+    account = AccountCreateSerializer()
 
     class Meta:
         model = User
